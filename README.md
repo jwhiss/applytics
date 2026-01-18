@@ -30,8 +30,7 @@ A modern, offline-first desktop application designed to  organize and track your
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/yourusername/application-tracker.git
-    cd application-tracker
+    git clone https://github.com/jwhiss/applytics.git
     ```
 
 2.  **Install dependencies:**
