@@ -1,3 +1,9 @@
+/**
+ * @file index.ts
+ * @description Defines TypeScript interfaces and types used throughout the application,
+ * including Application data models, statistics, and history items.
+ */
+
 export interface Application {
     id: number;
     company: string;
