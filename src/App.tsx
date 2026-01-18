@@ -1,3 +1,9 @@
+/**
+ * @file App.tsx
+ * @description Main application component that handles the overall layout, routing between views,
+ * and global state management for the sidebar and selected company.
+ */
+
 import { useState } from 'react';
 import Dashboard from './components/Dashboard';
 import ApplicationList from './components/ApplicationList';
@@ -12,6 +18,10 @@ import './styles/index.css';
 
 type View = 'dashboard' | 'list' | 'company' | 'board';
 
+/**
+ * Root component of the application.
+ * Manages the sidebar navigation and conditionally renders the active view.
+ */
 function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
