@@ -3,7 +3,6 @@
 A modern, offline-first desktop application designed to  organize and track your job applications efficiently. Built with **React**, **TypeScript**, **Electron**, and **SQLite**.
 
 ![Dashboard Preview](public/dashboard-preview.png)
-*(Note: Screenshot to be added)*
 
 ## Features
 
