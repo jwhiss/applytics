@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { Application, HistoryItem } from '../types';
+import type { Application, HistoryItem } from '../types/index';
 import { X, Save, Clock } from 'lucide-react';
 import Timeline from './Timeline';
 

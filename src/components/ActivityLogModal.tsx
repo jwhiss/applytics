@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import type { HistoryItem } from '../types';
+import type { HistoryItem } from '../types/index';
 
 interface Props {
     history: (HistoryItem & { company: string; title: string })[];
@@ -35,7 +35,7 @@ export default function ActivityLogModal({ history, onClose }: Props) {
                                         <td className="px-6 py-4 font-medium text-slate-200">{item.company}</td>
                                         <td className="px-6 py-4">
                                             Moved to <span className={`font-medium ${item.status === 'Offer' ? 'text-green-400' :
-                                                    item.status === 'Rejected' ? 'text-red-400' : 'text-blue-400'
+                                                item.status === 'Rejected' ? 'text-red-400' : 'text-blue-400'
                                                 }`}>{item.status}</span>
                                         </td>
                                         <td className="px-6 py-4 text-right text-xs">{new Date(item.date).toLocaleString()}</td>

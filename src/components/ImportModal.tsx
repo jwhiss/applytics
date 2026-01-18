@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import * as XLSX from 'xlsx';
 import { ArrowRight, Check, X, FileSpreadsheet, AlertCircle } from 'lucide-react';
-import type { Application } from '../types';
+import type { Application } from '../types/index';
 
 interface Props {
     onClose: () => void;

@@ -10,8 +10,9 @@ import {
     Title,
 } from 'chart.js';
 import { Bar, Doughnut } from 'react-chartjs-2';
-import type { ApplicationStats } from '../types';
+import type { ApplicationStats } from '../types/index';
 import ActivityLogModal from './ActivityLogModal';
+import type { HistoryItem } from '../types/index';
 
 ChartJS.register(
     ArcElement,
@@ -25,7 +26,7 @@ ChartJS.register(
 
 export default function Dashboard() {
     const [stats, setStats] = useState<ApplicationStats | null>(null);
-    const [recentActivity, setRecentActivity] = useState<(import('../types').HistoryItem & { company: string; title: string })[]>([]);
+    const [recentActivity, setRecentActivity] = useState<(HistoryItem & { company: string; title: string })[]>([]);
     const [showActivityModal, setShowActivityModal] = useState(false);
 
     useEffect(() => {

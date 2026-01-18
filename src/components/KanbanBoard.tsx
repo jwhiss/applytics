@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Application } from '../types';
+import type { Application } from '../types/index';
 
 const STATUSES = ['Applied', 'Online Assessment', 'Screening', 'Interview', 'Offer', 'Rejected', 'Online Assessment Expired', 'Withdrawn'];
 

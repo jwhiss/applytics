@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import type { Application, HistoryItem } from '../types';
+import type { Application } from '../types/index';
 import ImportModal from './ImportModal';
 import Timeline from './Timeline';
 import { Search, ChevronDown, ChevronUp, ArrowUpDown } from 'lucide-react';
@@ -32,7 +32,7 @@ export default function ApplicationList({ onEdit, onViewCompany, lastUpdated }: 
 
     // Expandable Row State
     const [expandedAppId, setExpandedAppId] = useState<number | null>(null);
-    const [expandedHistory, setExpandedHistory] = useState<HistoryItem[]>([]);
+    const [expandedHistory, setExpandedHistory] = useState<any[]>([]);
 
     async function toggleExpand(id: number) {
         if (expandedAppId === id) {
@@ -187,7 +187,8 @@ export default function ApplicationList({ onEdit, onViewCompany, lastUpdated }: 
                         ${app.status === 'Offer' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
                                                 app.status === 'Rejected' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
                                                     app.status === 'Applied' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
-                                                        'bg-purple-500/20 text-purple-400 border border-purple-500/30'}`}>
+                                                        'bg-purple-500/20 text-purple-400 border border-purple-500/30'
+                                            }`}>
                                             {app.status}
                                         </span>
                                     </td>

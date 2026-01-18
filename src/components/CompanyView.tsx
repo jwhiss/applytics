@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
-import type { Application } from '../types';
+import type { Application } from '../types/index';
 
 interface Props {
     companyName: string;
@@ -86,7 +86,8 @@ export default function CompanyView({ companyName, onBack, onEdit, lastUpdated }
                     ${app.status === 'Offer' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
                                             app.status === 'Rejected' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
                                                 app.status === 'Applied' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
-                                                    'bg-purple-500/20 text-purple-400 border border-purple-500/30'}`}>
+                                                    'bg-purple-500/20 text-purple-400 border border-purple-500/30'
+                                        }`}>
                                         {app.status}
                                     </span>
                                 </td>

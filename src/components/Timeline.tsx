@@ -1,4 +1,4 @@
-import type { HistoryItem } from '../types';
+import type { HistoryItem } from '../types/index';
 
 interface Props {
     history: HistoryItem[];

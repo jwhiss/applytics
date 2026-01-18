@@ -4,11 +4,11 @@ import ApplicationList from './components/ApplicationList';
 import ApplicationForm from './components/ApplicationForm';
 import CompanyView from './components/CompanyView';
 import KanbanBoard from './components/KanbanBoard';
-import type { Application } from './types';
+import type { Application } from './types/index';
 import { LayoutDashboard, List, Briefcase, Kanban, PanelLeft } from 'lucide-react';
 
 // Import CSS
-import './index.css';
+import './styles/index.css';
 
 type View = 'dashboard' | 'list' | 'company' | 'board';
 
