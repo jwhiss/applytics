@@ -39,6 +39,8 @@ A modern, offline-first desktop application designed to  organize and track your
     npm install
     ```
 
+Dependencies are installed in node_modules/ and require approximately 800MB of storage space.
+
 ### Running Locally
 
 To run the application in production mode:
