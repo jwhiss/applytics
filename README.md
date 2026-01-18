@@ -1,9 +1,9 @@
-# Application Tracker
+# Applytics
 
-A modern, offline-first desktop application designed to help you organize and track your job applications efficiently. Built with **React**, **TypeScript**, **Electron**, and **SQLite**.
+A modern, offline-first desktop application designed to  organize and track your job applications efficiently. Built with **React**, **TypeScript**, **Electron**, and **SQLite**.
 
 ![Dashboard Preview](public/dashboard-preview.png)
-*(Note: Screenshot to be added by user)*
+*(Note: Screenshot to be added)*
 
 ## Features
 
@@ -11,7 +11,7 @@ A modern, offline-first desktop application designed to help you organize and tr
 -   **Kanban Board**: Drag-and-drop interface to manage the lifecycle of your applications from "Applied" to "Offer".
 -   **Application History**: Detailed timeline of every update for each application, including status changes and notes.
 -   **Company Profiles**: View key statistics and history for specific companies.
--   **Offline First**: All data is stored locally in a SQLite database (`tracker.db`), ensuring privacy and speed.
+-   **Offline First**: All data is stored locally in a SQLite database, ensuring privacy and speed.
 -   **Import/Export**: Easily import existing application data (Excel/CSV support).
 
 ## Tech Stack
@@ -42,6 +42,12 @@ A modern, offline-first desktop application designed to help you organize and tr
 
 ### Running Locally
 
+To run the application in production mode:
+
+```bash
+npm start
+```
+
 To run the application in development mode with hot-reloading:
 
 ```bash
@@ -66,14 +72,6 @@ Your data is stored in a local SQLite database file:
 -   **Development**: `tracker.db` in the project root.
 -   **Production**: `tracker.db` in your system's User Data folder (e.g., `~/Library/Application Support/ApplicationTracker/` on macOS).
 
-## Contributing
-
-1.  Fork the repository.
-2.  Create a feature branch (`git checkout -b feature/AmazingFeature`).
-3.  Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-4.  Push to the branch (`git push origin feature/AmazingFeature`).
-5.  Open a Pull Request.
-
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the GPL 3.0 License. See `LICENSE` for more information.
