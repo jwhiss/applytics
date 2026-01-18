@@ -164,7 +164,7 @@ export default function Dashboard() {
                             <Bar data={keywordData} options={{ maintainAspectRatio: false }} />
                         ) : (
                             <div className="h-full flex items-center justify-center text-slate-500">
-                                No title data yet
+                                Start applying to see your role analysis!
                             </div>
                         )}
                     </div>
