@@ -1,3 +1,9 @@
+/**
+ * @file ApplicationForm.tsx
+ * @description form component for creating or editing job application entries.
+ * Handles validation and submission to the main process via IPC.
+ */
+
 import { useState, useEffect } from 'react';
 import type { Application, HistoryItem } from '../types/index';
 import { X, Save, Clock } from 'lucide-react';

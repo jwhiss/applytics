@@ -1,3 +1,9 @@
+/**
+ * @file Dashboard.tsx
+ * @description Provides a visual analytics dashboard for job applications.
+ * Displays summary cards, bar charts for activity over time, and a doughnut chart for status distribution.
+ */
+
 import { useEffect, useState } from 'react';
 import {
     Chart as ChartJS,

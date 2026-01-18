@@ -1,3 +1,9 @@
+/**
+ * @file ApplicationList.tsx
+ * @description Displays a searchable, sortable list of all job applications.
+ * Supports expanding rows to see timeline history and editing functionalities.
+ */
+
 import { useEffect, useState, useMemo } from 'react';
 import type { Application } from '../types/index';
 import ImportModal from './ImportModal';

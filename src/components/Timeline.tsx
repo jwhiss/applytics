@@ -1,3 +1,9 @@
+/**
+ * @file Timeline.tsx
+ * @description Vertical timeline component for displaying application history events.
+ * Renders a list of changes (status updates, notes, etc.) in reverse chronological order.
+ */
+
 import type { HistoryItem } from '../types/index';
 
 interface Props {

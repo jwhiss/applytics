@@ -1,3 +1,9 @@
+/**
+ * @file KanbanBoard.tsx
+ * @description A drag-and-drop Kanban board for managing application states.
+ * Columns represent different application statuses (Applied, Interview, Offer, etc.).
+ */
+
 import { useEffect, useState } from 'react';
 import type { Application } from '../types/index';
 

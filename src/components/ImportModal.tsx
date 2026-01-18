@@ -1,3 +1,9 @@
+/**
+ * @file ImportModal.tsx
+ * @description Modal dialog for importing applications from an Excel file.
+ * Provides a UI for mapping Excel columns to application fields.
+ */
+
 import { useState, useRef } from 'react';
 import * as XLSX from 'xlsx';
 import { ArrowRight, Check, X, FileSpreadsheet, AlertCircle } from 'lucide-react';

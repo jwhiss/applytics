@@ -1,3 +1,9 @@
+/**
+ * @file ActivityLogModal.tsx
+ * @description Modal displaying a log of recent activities across all applications.
+ * Useful for reviewing recent updates at a glance.
+ */
+
 import { X } from 'lucide-react';
 import type { HistoryItem } from '../types/index';
 

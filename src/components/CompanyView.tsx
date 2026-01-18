@@ -1,3 +1,9 @@
+/**
+ * @file CompanyView.tsx
+ * @description Detailed view for a specific company, showing all applications associated with it.
+ * Includes aggregate statistics for that company.
+ */
+
 import { useEffect, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import type { Application } from '../types/index';
