@@ -162,19 +162,28 @@ export function getStats() {
     // Keyword analysis
     const titles = db.prepare('SELECT title FROM applications').all() as { title: string }[];
     const keywords: Record<string, number> = {};
-    const targetKeywords = ['Software', 'Engineer', 'Developer', 'Data', 'Analyst', 'Product', 'Manager', 'Design', 'Research', 'Intern'];
+    // Common English stop words to exclude
+    const stopWords = new Set(['and', 'or', 'the', 'in', 'at', 'of', 'for', 'with', 'a', 'an', 'to', 'on', 'by', 'sr', 'jr']);
 
     titles.forEach(({ title }) => {
-        targetKeywords.forEach(keyword => {
-            if (title.toLowerCase().includes(keyword.toLowerCase())) {
-                keywords[keyword] = (keywords[keyword] || 0) + 1;
-            }
+        // Normalize: lowercase, replace non-alphanumeric (except standard letters) with spaces
+        const words = title.toLowerCase()
+            .replace(/[^\w\s]/g, ' ')
+            .split(/\s+/)
+            .filter(w => w.length > 2 && !stopWords.has(w));
+
+        words.forEach(word => {
+            // Capitalize first letter for display
+            const capitalized = word.charAt(0).toUpperCase() + word.slice(1);
+            keywords[capitalized] = (keywords[capitalized] || 0) + 1;
         });
     });
 
+    // Convert to array and sort by count (descending)
     const byKeyword = Object.entries(keywords)
         .map(([keyword, count]) => ({ keyword, count }))
-        .sort((a, b) => b.count - a.count);
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 10); // Top 10 keywords
 
 
     return {
