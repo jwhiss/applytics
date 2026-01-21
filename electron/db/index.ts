@@ -141,9 +141,21 @@ export function updateApplication(id: number, updates: Partial<Application>) {
         }
         stmt.run(params);
 
+        const historyStmt = db.prepare('INSERT INTO history (application_id, status) VALUES (?, ?)');
+
+        // If status changed, add new history item
         if (updates.status && updates.status !== currentApp.status) {
-            const historyStmt = db.prepare('INSERT INTO history (application_id, status) VALUES (?, ?)');
             historyStmt.run(id, updates.status);
+        }
+
+        // If date_applied changed, update the initial "Applied" history item
+        if (updates.date_applied) {
+            const updateHistoryDate = db.prepare(`
+                UPDATE history 
+                SET date = ? 
+                WHERE application_id = ? AND status = 'Applied'
+            `);
+            updateHistoryDate.run(updates.date_applied, id);
         }
     });
 
