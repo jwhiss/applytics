@@ -68,7 +68,7 @@ The output will be located in the `dist-electron` or `release` directory dependi
 
 ## Data Storage
 
-Your data is stored in a local SQLite database file:
+Application data is stored in a local SQLite database file:
 -   **Development**: `tracker.db` in the project root.
 -   **Production**: `tracker.db` in your system's User Data folder (e.g., `~/Library/Application Support/ApplicationTracker/` on macOS).
 
