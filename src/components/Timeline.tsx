@@ -29,7 +29,15 @@ export default function Timeline({ history }: Props) {
                             {item.status}
                         </span>
                         <span className="text-xs text-slate-500">
-                            {new Date(item.date).toLocaleString()}
+                            {(() => {
+                                const dateStr = item.date;
+                                // If date is YYYY-MM-DD (length 10), parse as local date
+                                if (dateStr.length === 10) {
+                                    const [year, month, day] = dateStr.split('-').map(Number);
+                                    return new Date(year, month - 1, day).toLocaleDateString();
+                                }
+                                return new Date(dateStr).toLocaleString();
+                            })()}
                         </span>
                     </div>
                 </div>
