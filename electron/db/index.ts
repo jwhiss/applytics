@@ -148,12 +148,17 @@ export function updateApplication(id: number, updates: Partial<Application>) {
             historyStmt.run(id, updates.status);
         }
 
-        // If date_applied changed, update the initial "Applied" history item
+        // If date_applied changed, update the initial history item (the one created with the app)
         if (updates.date_applied) {
             const updateHistoryDate = db.prepare(`
                 UPDATE history 
                 SET date = ? 
-                WHERE application_id = ? AND status = 'Applied'
+                WHERE id = (
+                    SELECT id FROM history 
+                    WHERE application_id = ? 
+                    ORDER BY id ASC 
+                    LIMIT 1
+                )
             `);
             updateHistoryDate.run(updates.date_applied, id);
         }
