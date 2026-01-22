@@ -1,5 +1,5 @@
 {
-  "name": "application-tracker",
+  "name": "applytics",
   "private": true,
   "version": "0.0.0",
   "main": "dist-electron/main.js",
@@ -48,8 +48,8 @@
     "wait-on": "^9.0.3"
   },
   "build": {
-    "appId": "com.jwhiss.application-tracker",
-    "productName": "ApplicationTracker",
+    "appId": "com.jwhiss.applytics",
+    "productName": "Applytics",
     "directories": {
       "output": "release"
     },
