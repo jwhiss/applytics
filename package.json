@@ -9,7 +9,9 @@
     "start": "tsc -b && vite build && tsc -p electron/tsconfig.json && NODE_ENV=production electron .",
     "build": "tsc -b && vite build && tsc -p electron/tsconfig.json",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postinstall": "electron-builder install-app-deps",
+    "package": "npm run build && electron-builder build --mac"
   },
   "dependencies": {
     "better-sqlite3": "^12.6.2",
@@ -44,5 +46,27 @@
     "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4",
     "wait-on": "^9.0.3"
+  },
+  "build": {
+    "appId": "com.jwhiss.application-tracker",
+    "productName": "ApplicationTracker",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist-electron/**/*",
+      "dist/**/*"
+    ],
+    "mac": {
+      "target": "dmg",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false
+    },
+    "linux": {
+      "target": "AppImage"
+    },
+    "win": {
+      "target": "nsis"
+    }
   }
 }
