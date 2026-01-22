@@ -17,6 +17,7 @@ function createWindow() {
         },
         titleBarStyle: 'hiddenInset', // Mac-like style
         title: 'Applytics',
+        icon: isDev ? path.join(__dirname, '../public/icon.png') : path.join(__dirname, '../dist/icon.png'),
     });
 
     if (isDev) {

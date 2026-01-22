@@ -50,6 +50,7 @@
   "build": {
     "appId": "com.jwhiss.applytics",
     "productName": "Applytics",
+    "icon": "build/icon.png",
     "directories": {
       "output": "release"
     },
