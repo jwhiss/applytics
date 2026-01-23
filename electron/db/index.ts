@@ -39,6 +39,11 @@ function createTables() {
       date TEXT DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY(application_id) REFERENCES applications(id) ON DELETE CASCADE
     );
+
+    CREATE TABLE IF NOT EXISTS settings (
+      key TEXT PRIMARY KEY,
+      value TEXT
+    );
   `;
     db.exec(createTableQuery);
 }
@@ -64,10 +69,23 @@ export interface HistoryItem {
     date: string;
 }
 
+interface ApplicationRow {
+    id: number;
+    company: string;
+    title: string;
+    status: string;
+    date_applied: string;
+    process_steps: string; // JSON string
+    current_step_index: number;
+    outcome: string | null;
+    notes: string;
+    last_updated: string;
+}
+
 // Helpers
 export function getApplications(): Application[] {
     const stmt = db.prepare('SELECT * FROM applications ORDER BY last_updated DESC');
-    const rows = stmt.all() as any[];
+    const rows = stmt.all() as ApplicationRow[];
     return rows.map(row => ({
         ...row,
         process_steps: row.process_steps ? JSON.parse(row.process_steps) : [],
@@ -88,6 +106,45 @@ export function getGlobalHistory(): (HistoryItem & { company: string; title: str
         LIMIT 10
     `);
     return stmt.all() as (HistoryItem & { company: string; title: string })[];
+}
+
+export function getSettings() {
+    const stmt = db.prepare('SELECT * FROM settings');
+    const rows = stmt.all() as { key: string; value: string }[];
+    const settings: Record<string, any> = {};
+    rows.forEach(row => {
+        try {
+            settings[row.key] = JSON.parse(row.value);
+        } catch {
+            settings[row.key] = row.value;
+        }
+    });
+    return settings;
+}
+
+export function saveSetting(key: string, value: any) {
+    const stmt = db.prepare('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)');
+    stmt.run(key, JSON.stringify(value));
+}
+
+export function bulkUpdateStatus(oldStatus: string, newStatus: string) {
+    const transaction = db.transaction(() => {
+        // Find all applications with oldStatus
+        const apps = db.prepare('SELECT id FROM applications WHERE status = ?').all(oldStatus) as { id: number }[];
+
+        if (apps.length === 0) return;
+
+        // Update status for these apps
+        const updateStmt = db.prepare('UPDATE applications SET status = ?, last_updated = CURRENT_TIMESTAMP WHERE status = ?');
+        updateStmt.run(newStatus, oldStatus);
+
+        // Add history entry for each
+        const insertHistory = db.prepare('INSERT INTO history (application_id, status) VALUES (?, ?)');
+        for (const app of apps) {
+            insertHistory.run(app.id, newStatus);
+        }
+    });
+    transaction();
 }
 
 export function addApplication(app: Partial<Application>) {

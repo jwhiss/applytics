@@ -9,4 +9,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     bulkImport: (apps: any[]) => ipcRenderer.invoke('bulk-import', apps),
     getHistory: (id: number) => ipcRenderer.invoke('get-history', id),
     getGlobalHistory: () => ipcRenderer.invoke('get-global-history'),
+    getSettings: () => ipcRenderer.invoke('get-settings'),
+    saveSetting: (key: string, value: any) => ipcRenderer.invoke('save-setting', { key, value }),
+    bulkUpdateStatus: (oldStatus: string, newStatus: string) => ipcRenderer.invoke('bulk-update-status', { oldStatus, newStatus }),
 });
