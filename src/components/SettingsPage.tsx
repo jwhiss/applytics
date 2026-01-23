@@ -18,10 +18,6 @@ export default function SettingsPage() {
 
     const handleDeleteClick = async (status: string) => {
         // Check usage info from backend
-        // Since we don't have a direct "check usage" API in context yet, we can either:
-        // 1. Fetch all applications and count (heavy?)
-        // 2. Add a specific count API.
-        // Let's use getApplications via direct API for now since it's available on window.
         const apps = await window.electronAPI.getApplications();
         const count = apps.filter(app => app.status === status).length;
 
