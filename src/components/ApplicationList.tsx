@@ -193,7 +193,9 @@ export default function ApplicationList({ onEdit, onViewCompany, lastUpdated }: 
                         ${app.status === 'Offer' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
                                                 app.status === 'Rejected' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
                                                     app.status === 'Applied' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
-                                                        'bg-purple-500/20 text-purple-400 border border-purple-500/30'
+                                                        app.status === 'Applied' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
+                                                            app.status === 'Screening' || app.status === 'Interview' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' :
+                                                                'bg-slate-500/20 text-slate-400 border border-slate-500/30'
                                             }`}>
                                             {app.status}
                                         </span>

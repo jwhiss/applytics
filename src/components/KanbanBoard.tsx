@@ -6,8 +6,7 @@
 
 import { useEffect, useState } from 'react';
 import type { Application } from '../types/index';
-
-const STATUSES = ['Applied', 'Online Assessment', 'Screening', 'Interview', 'Offer', 'Rejected', 'Online Assessment Expired', 'Withdrawn'];
+import { useSettings } from '../contexts/SettingsContext';
 
 interface Props {
     lastUpdated: number;
@@ -15,6 +14,7 @@ interface Props {
 }
 
 export default function KanbanBoard({ lastUpdated, onEdit }: Props) {
+    const { statuses } = useSettings();
     const [applications, setApplications] = useState<Application[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -68,7 +68,7 @@ export default function KanbanBoard({ lastUpdated, onEdit }: Props) {
         <div className="h-full overflow-x-auto p-6">
             <h1 className="text-3xl font-bold text-slate-100 mb-6">Pipeline Board</h1>
             <div className="flex gap-6 h-[calc(100vh-140px)] min-w-[1200px]">
-                {STATUSES.map(status => {
+                {statuses.map(status => {
                     const columnApps = applications.filter(a => a.status === status);
 
                     return (

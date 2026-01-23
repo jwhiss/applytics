@@ -35,12 +35,6 @@ export default function Dashboard() {
     const [recentActivity, setRecentActivity] = useState<(HistoryItem & { company: string; title: string })[]>([]);
     const [showActivityModal, setShowActivityModal] = useState(false);
 
-    useEffect(() => {
-        loadData();
-        const interval = setInterval(loadData, 5000);
-        return () => clearInterval(interval);
-    }, []);
-
     async function loadData() {
         const [statsData, historyData] = await Promise.all([
             window.electronAPI.getStats(),
@@ -49,6 +43,12 @@ export default function Dashboard() {
         setStats(statsData);
         setRecentActivity(historyData);
     }
+
+    useEffect(() => {
+        loadData();
+        const interval = setInterval(loadData, 5000);
+        return () => clearInterval(interval);
+    }, []);
 
     if (!stats) return <div className="p-8">Loading...</div>;
 

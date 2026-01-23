@@ -8,7 +8,7 @@ export interface Application {
     id: number;
     company: string;
     title: string;
-    status: 'Applied' | 'Online Assessment' | 'Screening' | 'Interview' | 'Offer' | 'Rejected' | 'Online Assessment Expired' | 'Withdrawn';
+    status: string;
     date_applied: string;
     process_steps: string[];
     current_step_index: number;
@@ -39,6 +39,9 @@ export interface IElectronAPI {
     bulkImport: (apps: Partial<Application>[]) => Promise<{ added: number; updated: number }>;
     getHistory: (id: number) => Promise<HistoryItem[]>;
     getGlobalHistory: () => Promise<(HistoryItem & { company: string; title: string })[]>;
+    getSettings: () => Promise<any>;
+    saveSetting: (key: string, value: any) => Promise<void>;
+    bulkUpdateStatus: (oldStatus: string, newStatus: string) => Promise<void>;
 }
 
 declare global {

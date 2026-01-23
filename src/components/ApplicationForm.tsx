@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import type { Application, HistoryItem } from '../types/index';
+import { useSettings } from '../contexts/SettingsContext';
 import { X, Save, Clock } from 'lucide-react';
 import Timeline from './Timeline';
 
@@ -31,7 +32,13 @@ export default function ApplicationForm({ initialData, onClose, onSave }: Props)
         notes: '',
     });
 
+    const { statuses } = useSettings();
     const [history, setHistory] = useState<HistoryItem[]>([]);
+
+    async function loadHistory(id: number) {
+        const data = await window.electronAPI.getHistory(id);
+        setHistory(data);
+    }
 
     useEffect(() => {
         if (initialData) {
@@ -42,11 +49,6 @@ export default function ApplicationForm({ initialData, onClose, onSave }: Props)
             loadHistory(initialData.id);
         }
     }, [initialData]);
-
-    async function loadHistory(id: number) {
-        const data = await window.electronAPI.getHistory(id);
-        setHistory(data);
-    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -110,14 +112,9 @@ export default function ApplicationForm({ initialData, onClose, onSave }: Props)
                                     value={formData.status}
                                     onChange={e => setFormData({ ...formData, status: e.target.value as any })}
                                 >
-                                    <option className="bg-slate-800" value="Applied">Applied</option>
-                                    <option className="bg-slate-800" value="Online Assessment">Online Assessment</option>
-                                    <option className="bg-slate-800" value="Screening">Screening</option>
-                                    <option className="bg-slate-800" value="Interview">Interview</option>
-                                    <option className="bg-slate-800" value="Offer">Offer</option>
-                                    <option className="bg-slate-800" value="Rejected">Rejected</option>
-                                    <option className="bg-slate-800" value="Online Assessment Expired">Online Assessment Expired</option>
-                                    <option className="bg-slate-800" value="Withdrawn">Withdrawn</option>
+                                    {statuses.map(status => (
+                                        <option key={status} className="bg-slate-800" value={status}>{status}</option>
+                                    ))}
                                 </select>
                             </div>
 
