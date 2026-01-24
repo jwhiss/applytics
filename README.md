@@ -61,7 +61,7 @@ This command runs Vite for the React frontend and launches the Electron window.
 To create a production build (distributable executable):
 
 ```bash
-npm run build
+npm run package
 ```
 
 The output will be located in the `dist-electron` or `release` directory depending on configuration.
