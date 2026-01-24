@@ -39,8 +39,8 @@ export interface IElectronAPI {
     bulkImport: (apps: Partial<Application>[]) => Promise<{ added: number; updated: number }>;
     getHistory: (id: number) => Promise<HistoryItem[]>;
     getGlobalHistory: () => Promise<(HistoryItem & { company: string; title: string })[]>;
-    getSettings: () => Promise<any>;
-    saveSetting: (key: string, value: any) => Promise<void>;
+    getSettings: () => Promise<Record<string, unknown>>;
+    saveSetting: (key: string, value: unknown) => Promise<void>;
     bulkUpdateStatus: (oldStatus: string, newStatus: string) => Promise<void>;
 }
 

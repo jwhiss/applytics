@@ -2,14 +2,14 @@ import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('electronAPI', {
     getApplications: () => ipcRenderer.invoke('get-applications'),
-    addApplication: (app: any) => ipcRenderer.invoke('add-application', app),
-    updateApplication: (id: number, updates: any) => ipcRenderer.invoke('update-application', { id, ...updates }),
+    addApplication: (app: unknown) => ipcRenderer.invoke('add-application', app),
+    updateApplication: (id: number, updates: unknown) => ipcRenderer.invoke('update-application', { id, ...(updates as object) }),
     deleteApplication: (id: number) => ipcRenderer.invoke('delete-application', id),
     getStats: () => ipcRenderer.invoke('get-stats'),
-    bulkImport: (apps: any[]) => ipcRenderer.invoke('bulk-import', apps),
+    bulkImport: (apps: unknown[]) => ipcRenderer.invoke('bulk-import', apps),
     getHistory: (id: number) => ipcRenderer.invoke('get-history', id),
     getGlobalHistory: () => ipcRenderer.invoke('get-global-history'),
     getSettings: () => ipcRenderer.invoke('get-settings'),
-    saveSetting: (key: string, value: any) => ipcRenderer.invoke('save-setting', { key, value }),
+    saveSetting: (key: string, value: unknown) => ipcRenderer.invoke('save-setting', { key, value }),
     bulkUpdateStatus: (oldStatus: string, newStatus: string) => ipcRenderer.invoke('bulk-update-status', { oldStatus, newStatus }),
 });

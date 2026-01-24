@@ -111,7 +111,7 @@ export function getGlobalHistory(): (HistoryItem & { company: string; title: str
 export function getSettings() {
     const stmt = db.prepare('SELECT * FROM settings');
     const rows = stmt.all() as { key: string; value: string }[];
-    const settings: Record<string, any> = {};
+    const settings: Record<string, unknown> = {};
     rows.forEach(row => {
         try {
             settings[row.key] = JSON.parse(row.value);
@@ -122,7 +122,7 @@ export function getSettings() {
     return settings;
 }
 
-export function saveSetting(key: string, value: any) {
+export function saveSetting(key: string, value: unknown) {
     const stmt = db.prepare('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)');
     stmt.run(key, JSON.stringify(value));
 }
@@ -194,7 +194,7 @@ export function updateApplication(id: number, updates: Partial<Application>) {
 
         const params = { ...updates, id };
         if (updates.process_steps) {
-            (params as any).process_steps = JSON.stringify(updates.process_steps);
+            (params as Record<string, unknown>).process_steps = JSON.stringify(updates.process_steps);
         }
         stmt.run(params);
 
@@ -205,7 +205,6 @@ export function updateApplication(id: number, updates: Partial<Application>) {
             historyStmt.run(id, updates.status);
         }
 
-        // If date_applied changed, update the initial history item (the one created with the app)
         if (updates.date_applied) {
             const updateHistoryDate = db.prepare(`
                 UPDATE history 
