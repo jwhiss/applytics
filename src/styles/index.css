@@ -75,5 +75,5 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-700 rounded-full hover:bg-slate-600;
+  @apply bg-surface rounded-full hover:bg-surface-hover;
 }
