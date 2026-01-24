@@ -17,7 +17,10 @@ interface Props {
 }
 
 export default function ApplicationForm({ initialData, onClose, onSave }: Props) {
-    const [formData, setFormData] = useState<Partial<Application>>({
+    const [formData, setFormData] = useState<Partial<Application>>(initialData ? {
+        ...initialData,
+        date_applied: initialData.date_applied.split('T')[0]
+    } : {
         company: '',
         title: '',
         status: 'Applied',
@@ -35,19 +38,27 @@ export default function ApplicationForm({ initialData, onClose, onSave }: Props)
     const { statuses } = useSettings();
     const [history, setHistory] = useState<HistoryItem[]>([]);
 
-    async function loadHistory(id: number) {
-        const data = await window.electronAPI.getHistory(id);
-        setHistory(data);
-    }
-
     useEffect(() => {
+        let isMounted = true;
+
+        async function loadHistory(id: number) {
+            try {
+                const data = await window.electronAPI.getHistory(id);
+                if (isMounted) {
+                    setHistory(data);
+                }
+            } catch (error) {
+                console.error('Failed to load history:', error);
+            }
+        }
+
         if (initialData) {
-            setFormData({
-                ...initialData,
-                date_applied: initialData.date_applied.split('T')[0] // Format for input date
-            });
             loadHistory(initialData.id);
         }
+
+        return () => {
+            isMounted = false;
+        };
     }, [initialData]);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -70,18 +81,18 @@ export default function ApplicationForm({ initialData, onClose, onSave }: Props)
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
             <div className={`glass-card w-full ${initialData ? 'max-w-4xl' : 'max-w-lg'} overflow-hidden flex flex-row`}>
                 <div className="flex-1">
-                    <div className="px-6 py-4 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/50">
-                        <h2 className="text-xl font-bold text-slate-100">
+                    <div className="px-6 py-4 border-b border-border flex justify-between items-center bg-surface">
+                        <h2 className="text-xl font-bold text-text-main">
                             {initialData ? 'Edit Application' : 'New Application'}
                         </h2>
-                        <button onClick={onClose} className="p-1 hover:bg-slate-700 rounded-full transition-colors text-slate-400 hover:text-white">
+                        <button onClick={onClose} className="p-1 hover:bg-surface-hover rounded-full transition-colors text-text-muted hover:text-text-main">
                             <X size={20} />
                         </button>
                     </div>
 
                     <form onSubmit={handleSubmit} className="p-6 space-y-4">
                         <div>
-                            <label className="block text-sm font-medium text-slate-300 mb-1">Company</label>
+                            <label className="block text-sm font-medium text-text-muted mb-1">Company</label>
                             <input
                                 required
                                 type="text"
@@ -93,7 +104,7 @@ export default function ApplicationForm({ initialData, onClose, onSave }: Props)
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-slate-300 mb-1">Job Title</label>
+                            <label className="block text-sm font-medium text-text-muted mb-1">Job Title</label>
                             <input
                                 required
                                 type="text"
@@ -106,20 +117,20 @@ export default function ApplicationForm({ initialData, onClose, onSave }: Props)
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-1">Status</label>
+                                <label className="block text-sm font-medium text-text-muted mb-1">Status</label>
                                 <select
                                     className="w-full px-3 py-2 glass-input outline-none"
                                     value={formData.status}
-                                    onChange={e => setFormData({ ...formData, status: e.target.value as any })}
+                                    onChange={e => setFormData({ ...formData, status: e.target.value })}
                                 >
                                     {statuses.map(status => (
-                                        <option key={status} className="bg-slate-800" value={status}>{status}</option>
+                                        <option key={status} className="bg-background" value={status}>{status}</option>
                                     ))}
                                 </select>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-1">Date Applied</label>
+                                <label className="block text-sm font-medium text-text-muted mb-1">Date Applied</label>
                                 <input
                                     type="date"
                                     className="w-full px-3 py-2 glass-input outline-none"
@@ -130,7 +141,7 @@ export default function ApplicationForm({ initialData, onClose, onSave }: Props)
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-slate-300 mb-1">Outcome / Notes</label>
+                            <label className="block text-sm font-medium text-text-muted mb-1">Outcome / Notes</label>
                             <textarea
                                 className="w-full px-3 py-2 glass-input outline-none h-24 resize-none"
                                 value={formData.notes}
@@ -143,7 +154,7 @@ export default function ApplicationForm({ initialData, onClose, onSave }: Props)
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="px-4 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 rounded-lg transition-colors"
+                                className="px-4 py-2 text-sm font-medium text-text-muted hover:bg-surface-hover rounded-lg transition-colors"
                             >
                                 Cancel
                             </button>
@@ -159,9 +170,9 @@ export default function ApplicationForm({ initialData, onClose, onSave }: Props)
                 </div>
 
                 {initialData && (
-                    <div className="w-72 bg-slate-900/50 border-l border-slate-700/50 p-6">
-                        <div className="flex items-center space-x-2 text-slate-200 mb-6">
-                            <Clock size={18} className="text-blue-400" />
+                    <div className="w-72 bg-surface/50 border-l border-border p-6">
+                        <div className="flex items-center space-x-2 text-text-main mb-6">
+                            <Clock size={18} className="text-blue-600 dark:text-blue-400" />
                             <h3 className="font-semibold">History</h3>
                         </div>
                         <Timeline history={history} />

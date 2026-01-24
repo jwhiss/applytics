@@ -27,20 +27,30 @@ export default function CompanyView({ companyName, onBack, onEdit, lastUpdated }
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        loadCompanyApplications();
-    }, [companyName, lastUpdated]);
+        let isMounted = true;
 
-    async function loadCompanyApplications() {
-        try {
-            const data = await window.electronAPI.getApplications();
-            // Filter locally for now, could be an API call if dataset grows
-            setApplications(data.filter(app => app.company === companyName).sort((a, b) =>
-                new Date(b.date_applied).getTime() - new Date(a.date_applied).getTime()
-            ));
-        } finally {
-            setLoading(false);
+        async function loadCompanyApplications() {
+            try {
+                const data = await window.electronAPI.getApplications();
+                if (isMounted) {
+                    // Filter locally for now, could be an API call if dataset grows
+                    setApplications(data.filter(app => app.company === companyName).sort((a, b) =>
+                        new Date(b.date_applied).getTime() - new Date(a.date_applied).getTime()
+                    ));
+                }
+            } finally {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            }
         }
-    }
+
+        loadCompanyApplications();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [companyName, lastUpdated]);
 
     if (loading) return <div className="p-8">Loading...</div>;
 
@@ -55,7 +65,7 @@ export default function CompanyView({ companyName, onBack, onEdit, lastUpdated }
         <div className="p-6">
             <button
                 onClick={onBack}
-                className="flex items-center text-slate-400 hover:text-white mb-6 transition-colors"
+                className="flex items-center text-text-muted hover:text-text-main mb-6 transition-colors"
             >
                 <ArrowLeft size={20} className="mr-2" />
                 Back to Applications
@@ -63,9 +73,9 @@ export default function CompanyView({ companyName, onBack, onEdit, lastUpdated }
 
             <div className="flex items-end justify-between mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-slate-100 mb-2">{companyName}</h1>
-                    <div className="flex gap-4 text-sm text-slate-400">
-                        <span>Total Applications: <strong className="text-slate-200">{stats.total}</strong></span>
+                    <h1 className="text-3xl font-bold text-text-main mb-2">{companyName}</h1>
+                    <div className="flex gap-4 text-sm text-text-muted">
+                        <span>Total Applications: <strong className="text-text-main">{stats.total}</strong></span>
                         <span>•</span>
                         <span>Active: <strong className="text-blue-400">{stats.active}</strong></span>
                     </div>
@@ -73,8 +83,8 @@ export default function CompanyView({ companyName, onBack, onEdit, lastUpdated }
             </div>
 
             <div className="glass-card overflow-hidden">
-                <table className="w-full text-left text-sm text-slate-400">
-                    <thead className="bg-slate-800/50 text-xs uppercase text-slate-300">
+                <table className="w-full text-left text-sm text-text-muted">
+                    <thead className="bg-surface/50 text-xs uppercase text-text-muted">
                         <tr>
                             <th className="px-6 py-3">Title</th>
                             <th className="px-6 py-3">Status</th>
@@ -83,10 +93,10 @@ export default function CompanyView({ companyName, onBack, onEdit, lastUpdated }
                             <th className="px-6 py-3 text-right">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-700/50">
+                    <tbody className="divide-y divide-border">
                         {applications.map((app) => (
-                            <tr key={app.id} className="hover:bg-slate-700/30 transition-colors">
-                                <td className="px-6 py-4 font-medium text-slate-200">{app.title}</td>
+                            <tr key={app.id} className="hover:bg-surface-hover transition-colors">
+                                <td className="px-6 py-4 font-medium text-text-main">{app.title}</td>
                                 <td className="px-6 py-4">
                                     <span className={`px-2 py-1 rounded-full text-xs font-semibold
                     ${app.status === 'Offer' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :

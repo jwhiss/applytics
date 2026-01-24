@@ -66,7 +66,7 @@ export default function KanbanBoard({ lastUpdated, onEdit }: Props) {
 
     return (
         <div className="h-full overflow-x-auto p-6">
-            <h1 className="text-3xl font-bold text-slate-100 mb-6">Pipeline Board</h1>
+            <h1 className="text-3xl font-bold text-text-main mb-6">Pipeline Board</h1>
             <div className="flex gap-6 h-[calc(100vh-140px)] min-w-[1200px]">
                 {statuses.map(status => {
                     const columnApps = applications.filter(a => a.status === status);
@@ -74,15 +74,15 @@ export default function KanbanBoard({ lastUpdated, onEdit }: Props) {
                     return (
                         <div
                             key={status}
-                            className="flex-1 min-w-[280px] flex flex-col glass-card bg-slate-800/20"
+                            className="flex-1 min-w-[280px] flex flex-col glass-card bg-surface/30"
                             onDragOver={handleDragOver}
                             onDrop={(e) => handleDrop(e, status)}
                         >
-                            <div className={`p-4 border-b border-slate-700/50 font-semibold flex justify-between items-center
-                                ${status === 'Offer' ? 'text-green-400' :
-                                    status === 'Rejected' ? 'text-red-400' : 'text-slate-200'}`}>
+                            <div className={`p-4 border-b border-border font-semibold flex justify-between items-center
+                                ${status === 'Offer' ? 'text-green-600 dark:text-green-400' :
+                                    status === 'Rejected' ? 'text-red-600 dark:text-red-400' : 'text-text-main'}`}>
                                 <span>{status}</span>
-                                <span className="text-xs bg-slate-700/50 px-2 py-1 rounded-full text-slate-400">
+                                <span className="text-xs bg-surface-hover px-2 py-1 rounded-full text-text-muted">
                                     {columnApps.length}
                                 </span>
                             </div>
@@ -94,15 +94,15 @@ export default function KanbanBoard({ lastUpdated, onEdit }: Props) {
                                         draggable
                                         onDragStart={(e) => handleDragStart(e, app.id)}
                                         onClick={() => onEdit(app)}
-                                        className="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 hover:border-blue-500/50 cursor-grab active:cursor-grabbing hover:bg-slate-700/50 transition-all shadow-sm group"
+                                        className="bg-surface p-3 rounded-lg border border-border hover:border-blue-500/50 cursor-grab active:cursor-grabbing hover:bg-surface-hover transition-all shadow-sm group"
                                     >
-                                        <div className="font-medium text-slate-200 group-hover:text-blue-400 transition-colors">
+                                        <div className="font-medium text-text-main group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                                             {app.company}
                                         </div>
-                                        <div className="text-sm text-slate-400 mt-1 truncate">
+                                        <div className="text-sm text-text-muted mt-1 truncate">
                                             {app.title}
                                         </div>
-                                        <div className="text-xs text-slate-500 mt-3 flex justify-between">
+                                        <div className="text-xs text-text-muted mt-3 flex justify-between">
                                             <span>{new Date(app.date_applied).toLocaleDateString()}</span>
                                         </div>
                                     </div>

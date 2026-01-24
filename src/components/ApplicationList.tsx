@@ -5,7 +5,7 @@
  */
 
 import { useEffect, useState, useMemo } from 'react';
-import type { Application } from '../types/index';
+import type { Application, HistoryItem } from '../types/index';
 import ImportModal from './ImportModal';
 import Timeline from './Timeline';
 import { Search, ChevronDown, ChevronUp, ArrowUpDown } from 'lucide-react';
@@ -38,7 +38,7 @@ export default function ApplicationList({ onEdit, onViewCompany, lastUpdated }: 
 
     // Expandable Row State
     const [expandedAppId, setExpandedAppId] = useState<number | null>(null);
-    const [expandedHistory, setExpandedHistory] = useState<any[]>([]);
+    const [expandedHistory, setExpandedHistory] = useState<HistoryItem[]>([]);
 
     async function toggleExpand(id: number) {
         if (expandedAppId === id) {
@@ -106,7 +106,7 @@ export default function ApplicationList({ onEdit, onViewCompany, lastUpdated }: 
     }, [applications, searchQuery, sortConfig]);
 
     const SortIcon = ({ field }: { field: SortField }) => {
-        if (sortConfig.field !== field) return <ArrowUpDown size={14} className="ml-1 text-slate-600" />;
+        if (sortConfig.field !== field) return <ArrowUpDown size={14} className="ml-1 text-text-muted" />;
         return sortConfig.direction === 'asc'
             ? <ChevronUp size={14} className="ml-1 text-blue-400" />
             : <ChevronDown size={14} className="ml-1 text-blue-400" />;
@@ -118,11 +118,11 @@ export default function ApplicationList({ onEdit, onViewCompany, lastUpdated }: 
         <div className="p-6">
             <div className="flex flex-col gap-6 mb-6">
                 <div className="flex justify-between items-center">
-                    <h1 className="text-3xl font-bold text-slate-100">Applications</h1>
+                    <h1 className="text-3xl font-bold text-text-main">Applications</h1>
                     <div className="space-x-3">
                         <button
                             onClick={() => setIsImportOpen(true)}
-                            className="bg-slate-700 hover:bg-slate-600 text-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                            className="bg-surface hover:bg-surface-hover text-text-main px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                         >
                             Import Excel
                         </button>
@@ -143,46 +143,46 @@ export default function ApplicationList({ onEdit, onViewCompany, lastUpdated }: 
                         placeholder="Search applications..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                        className="w-full pl-10 pr-4 py-2 glass-input border border-border rounded-lg text-text-main focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                     />
                 </div>
             </div>
 
             <div className="glass-card overflow-hidden">
-                <table className="w-full text-left text-sm text-slate-400">
-                    <thead className="bg-slate-800/50 text-xs uppercase text-slate-300">
+                <table className="w-full text-left text-sm text-text-muted">
+                    <thead className="bg-surface/50 text-xs uppercase text-text-muted">
                         <tr>
-                            <th className="px-6 py-3 cursor-pointer hover:bg-slate-700/50 transition-colors" onClick={() => handleSort('company')}>
+                            <th className="px-6 py-3 cursor-pointer hover:bg-surface-hover transition-colors" onClick={() => handleSort('company')}>
                                 <div className="flex items-center">Company <SortIcon field="company" /></div>
                             </th>
-                            <th className="px-6 py-3 cursor-pointer hover:bg-slate-700/50 transition-colors" onClick={() => handleSort('title')}>
+                            <th className="px-6 py-3 cursor-pointer hover:bg-surface-hover transition-colors" onClick={() => handleSort('title')}>
                                 <div className="flex items-center">Title <SortIcon field="title" /></div>
                             </th>
-                            <th className="px-6 py-3 cursor-pointer hover:bg-slate-700/50 transition-colors" onClick={() => handleSort('status')}>
+                            <th className="px-6 py-3 cursor-pointer hover:bg-surface-hover transition-colors" onClick={() => handleSort('status')}>
                                 <div className="flex items-center">Status <SortIcon field="status" /></div>
                             </th>
-                            <th className="px-6 py-3 cursor-pointer hover:bg-slate-700/50 transition-colors" onClick={() => handleSort('date_applied')}>
+                            <th className="px-6 py-3 cursor-pointer hover:bg-surface-hover transition-colors" onClick={() => handleSort('date_applied')}>
                                 <div className="flex items-center">Date Applied <SortIcon field="date_applied" /></div>
                             </th>
                             <th className="px-6 py-3 text-right">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-700/50">
+                    <tbody className="divide-y divide-border">
                         {sortedAndFilteredApplications.map((app) => (
                             <>
-                                <tr key={app.id} className="hover:bg-slate-700/30 transition-colors">
-                                    <td className="px-6 py-4 font-medium text-slate-200 flex items-center gap-2">
+                                <tr key={app.id} className="hover:bg-surface-hover transition-colors">
+                                    <td className="px-6 py-4 font-medium text-text-main flex items-center gap-2">
                                         <button
                                             onClick={() => toggleExpand(app.id)}
-                                            className="p-1 hover:bg-slate-700 rounded transition-colors group"
+                                            className="p-1 hover:bg-surface-hover rounded transition-colors group"
                                         >
                                             <div className={`transition-transform duration-200 ${expandedAppId === app.id ? 'rotate-0' : '-rotate-90'}`}>
-                                                <ChevronDown size={16} className="text-slate-500 group-hover:text-blue-400" />
+                                                <ChevronDown size={16} className="text-text-muted group-hover:text-blue-500 dark:group-hover:text-blue-400" />
                                             </div>
                                         </button>
                                         <button
                                             onClick={() => onViewCompany(app.company)}
-                                            className="hover:text-blue-400 hover:underline text-left"
+                                            className="hover:text-blue-600 dark:hover:text-blue-400 hover:underline text-left"
                                         >
                                             {app.company}
                                         </button>
@@ -195,35 +195,34 @@ export default function ApplicationList({ onEdit, onViewCompany, lastUpdated }: 
                                                     app.status === 'Applied' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
                                                         app.status === 'Applied' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
                                                             app.status === 'Screening' || app.status === 'Interview' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' :
-                                                                'bg-slate-500/20 text-slate-400 border border-slate-500/30'
+                                                                'bg-slate-500/20 text-text-muted border border-border'
                                             }`}>
                                             {app.status}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4">{formatDate(app.date_applied)}</td>
                                     <td className="px-6 py-4 text-right space-x-2">
-                                        <button onClick={() => onEdit(app)} className="text-blue-400 hover:text-blue-300 font-medium">Edit</button>
-                                        <button onClick={() => deleteApp(app.id)} className="text-red-400 hover:text-red-300 font-medium">Delete</button>
+                                        <button onClick={() => onEdit(app)} className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 font-medium">Edit</button>
+                                        <button onClick={() => deleteApp(app.id)} className="text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 font-medium">Delete</button>
                                     </td>
                                 </tr>
                                 {expandedAppId === app.id && (
-                                    <tr className="bg-slate-800/30">
+                                    <tr className="bg-surface/30">
                                         <td colSpan={5} className="px-6 py-4 border-l-4 border-blue-500/50">
                                             <div className="flex gap-8">
                                                 <div className="w-64 flex-shrink-0">
-                                                    <h4 className="text-sm font-semibold text-slate-300 mb-3">Timeline</h4>
+                                                    <h4 className="text-sm font-semibold text-text-main mb-3">Timeline</h4>
                                                     <Timeline history={expandedHistory} />
                                                 </div>
                                                 <div className="flex-1">
-                                                    <h4 className="text-sm font-semibold text-slate-300 mb-2">Notes</h4>
-                                                    <p className="text-sm text-slate-400 whitespace-pre-wrap">
+                                                    <h4 className="text-sm font-semibold text-text-main mb-2">Notes</h4>
+                                                    <p className="text-sm text-text-muted whitespace-pre-wrap">
                                                         {app.notes || 'No notes added.'}
                                                     </p>
-
                                                     {app.outcome && (
                                                         <>
-                                                            <h4 className="text-sm font-semibold text-slate-300 mt-4 mb-2">Outcome</h4>
-                                                            <p className="text-sm text-slate-400">{app.outcome}</p>
+                                                            <h4 className="text-sm font-semibold text-text-main mt-4 mb-2">Outcome</h4>
+                                                            <p className="text-sm text-text-muted">{app.outcome}</p>
                                                         </>
                                                     )}
                                                 </div>
@@ -235,7 +234,7 @@ export default function ApplicationList({ onEdit, onViewCompany, lastUpdated }: 
                         ))}
                         {sortedAndFilteredApplications.length === 0 && (
                             <tr>
-                                <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
+                                <td colSpan={5} className="px-6 py-8 text-center text-text-muted">
                                     {searchQuery ? 'No applications match your search.' : 'No applications found. Add one to get started!'}
                                 </td>
                             </tr>

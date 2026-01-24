@@ -42,7 +42,7 @@ function App() {
 
   return (
     <SettingsProvider>
-      <div className="flex h-screen bg-slate-50 dark:bg-slate-900 font-sans text-slate-900 dark:text-slate-100 overflow-hidden transition-colors duration-300">
+      <div className="flex h-screen bg-background font-sans text-text-main overflow-hidden transition-colors duration-300">
         {/* Sidebar */}
         <aside
           className={`glass-card flex flex-col pt-6 transition-all duration-300 ease-in-out
@@ -61,7 +61,7 @@ function App() {
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200
               ${currentView === 'dashboard'
                   ? 'bg-blue-600/20 text-blue-400 font-semibold shadow-sm'
-                  : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-200'}`}
+                  : 'text-text-muted hover:bg-surface-hover hover:text-text-main'}`}
             >
               <LayoutDashboard size={20} className="min-w-[20px]" />
               <span className="whitespace-nowrap">Dashboard</span>
@@ -72,7 +72,7 @@ function App() {
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200
               ${['list', 'company'].includes(currentView)
                   ? 'bg-blue-600/20 text-blue-400 font-semibold shadow-sm'
-                  : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-200'}`}
+                  : 'text-text-muted hover:bg-surface-hover hover:text-text-main'}`}
             >
               <List size={20} className="min-w-[20px]" />
               <span className="whitespace-nowrap">Applications</span>
@@ -83,7 +83,7 @@ function App() {
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200
               ${currentView === 'board'
                   ? 'bg-blue-600/20 text-blue-400 font-semibold shadow-sm'
-                  : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-200'}`}
+                  : 'text-text-muted hover:bg-surface-hover hover:text-text-main'}`}
             >
               <Kanban size={20} className="min-w-[20px]" />
               <span className="whitespace-nowrap">Board</span>
@@ -96,14 +96,14 @@ function App() {
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200
                 ${currentView === 'settings'
                   ? 'bg-blue-600/20 text-blue-400 font-semibold shadow-sm'
-                  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 hover:text-slate-700 dark:hover:text-slate-200'}`}
+                  : 'text-text-muted hover:bg-surface-hover hover:text-text-main'}`}
             >
               <Settings size={20} className="min-w-[20px]" />
               <span className="whitespace-nowrap">Settings</span>
             </button>
           </div>
 
-          <div className="p-4 text-xs text-center text-slate-500 whitespace-nowrap">
+          <div className="p-4 text-xs text-center text-text-muted whitespace-nowrap">
             v1.0.0
           </div>
         </aside>
@@ -113,7 +113,7 @@ function App() {
           <div className="flex items-center mb-4">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-colors"
+              className="p-2 text-text-muted hover:text-text-main hover:bg-surface-hover rounded-lg transition-colors"
               title={isSidebarOpen ? "Hide Sidebar" : "Show Sidebar"}
             >
               <PanelLeft size={20} />
@@ -150,6 +150,7 @@ function App() {
         {/* Modal */}
         {editingApp !== undefined && (
           <ApplicationForm
+            key={editingApp?.id ?? 'new'}
             initialData={editingApp}
             onClose={() => setEditingApp(undefined)}
             onSave={handleSave}

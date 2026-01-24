@@ -35,19 +35,30 @@ export default function Dashboard() {
     const [recentActivity, setRecentActivity] = useState<(HistoryItem & { company: string; title: string })[]>([]);
     const [showActivityModal, setShowActivityModal] = useState(false);
 
-    async function loadData() {
-        const [statsData, historyData] = await Promise.all([
-            window.electronAPI.getStats(),
-            window.electronAPI.getGlobalHistory()
-        ]);
-        setStats(statsData);
-        setRecentActivity(historyData);
-    }
-
     useEffect(() => {
+        let isMounted = true;
+
+        async function loadData() {
+            try {
+                const [statsData, historyData] = await Promise.all([
+                    window.electronAPI.getStats(),
+                    window.electronAPI.getGlobalHistory()
+                ]);
+                if (isMounted) {
+                    setStats(statsData);
+                    setRecentActivity(historyData);
+                }
+            } catch (error) {
+                console.error('Failed to load dashboard data:', error);
+            }
+        }
+
         loadData();
         const interval = setInterval(loadData, 5000);
-        return () => clearInterval(interval);
+        return () => {
+            clearInterval(interval);
+            isMounted = false;
+        };
     }, []);
 
     if (!stats) return <div className="p-8">Loading...</div>;
@@ -105,22 +116,22 @@ export default function Dashboard() {
 
     return (
         <div className="p-6 space-y-6">
-            <h1 className="text-3xl font-bold text-slate-100">Dashboard</h1>
+            <h1 className="text-3xl font-bold text-text-main">Dashboard</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="glass-card p-6 lg:col-span-1">
-                    <h2 className="text-xl font-semibold mb-4 text-slate-200">Total Applications</h2>
-                    <div className="text-5xl font-bold text-blue-400 mb-2">{stats.total}</div>
-                    <p className="text-slate-400 text-sm">Tracked across all time</p>
+                    <h2 className="text-xl font-semibold mb-4 text-text-main">Total Applications</h2>
+                    <div className="text-5xl font-bold text-blue-600 dark:text-blue-400 mb-2">{stats.total}</div>
+                    <p className="text-text-muted text-sm">Tracked across all time</p>
                 </div>
 
                 <div className="glass-card p-6 lg:col-span-3">
                     <div className="flex justify-between items-start mb-4">
-                        <h2 className="text-xl font-semibold text-slate-200">Recent Activity</h2>
+                        <h2 className="text-xl font-semibold text-text-main">Recent Activity</h2>
                         {recentActivity.length > 0 && (
                             <button
                                 onClick={() => setShowActivityModal(true)}
-                                className="text-xs text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 font-medium transition-colors"
                             >
                                 View All Activity
                             </button>
@@ -129,19 +140,19 @@ export default function Dashboard() {
 
                     <div className="space-y-3">
                         {recentActivity.length === 0 ? (
-                            <p className="text-slate-500">No recent activity.</p>
+                            <p className="text-text-muted">No recent activity.</p>
                         ) : (
                             recentActivity.slice(0, 3).map((item) => (
-                                <div key={item.id} className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg border border-slate-700/50">
+                                <div key={item.id} className="flex items-center justify-between p-3 bg-surface rounded-lg border border-border shadow-sm">
                                     <div className="flex items-center space-x-3">
-                                        <div className={`w-2 h-2 rounded-full ${item.status === 'Offer' ? 'bg-green-400' : 'bg-blue-400'}`} />
+                                        <div className={`w-2 h-2 rounded-full ${item.status === 'Offer' ? 'bg-green-500' : 'bg-blue-500'}`} />
                                         <div>
-                                            <span className="font-medium text-slate-200">{item.company}</span>
-                                            <span className="mx-2 text-slate-500">•</span>
-                                            <span className="text-slate-300">{item.status}</span>
+                                            <span className="font-medium text-text-main">{item.company}</span>
+                                            <span className="mx-2 text-text-muted">•</span>
+                                            <span className="text-text-muted">{item.status}</span>
                                         </div>
                                     </div>
-                                    <span className="text-xs text-slate-500">{new Date(item.date).toLocaleString()}</span>
+                                    <span className="text-xs text-text-muted">{new Date(item.date).toLocaleString()}</span>
                                 </div>
                             ))
                         )}
@@ -151,19 +162,19 @@ export default function Dashboard() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="glass-card p-6">
-                    <h2 className="text-xl font-semibold mb-4 text-slate-200">Application Status</h2>
+                    <h2 className="text-xl font-semibold mb-4 text-text-main">Application Status</h2>
                     <div className="h-64 flex justify-center">
                         <Doughnut data={statusData} options={{ maintainAspectRatio: false }} />
                     </div>
                 </div>
 
                 <div className="glass-card p-6">
-                    <h2 className="text-xl font-semibold mb-4 text-slate-200">Role Analysis</h2>
+                    <h2 className="text-xl font-semibold mb-4 text-text-main">Role Analysis</h2>
                     <div className="h-64">
                         {stats.byKeyword.length > 0 ? (
                             <Bar data={keywordData} options={{ maintainAspectRatio: false }} />
                         ) : (
-                            <div className="h-full flex items-center justify-center text-slate-500">
+                            <div className="h-full flex items-center justify-center text-text-muted">
                                 Start applying to see your role analysis!
                             </div>
                         )}

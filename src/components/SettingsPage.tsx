@@ -71,17 +71,17 @@ export default function SettingsPage() {
     return (
         <div className="max-w-4xl mx-auto p-6 space-y-8">
             <div>
-                <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">Settings</h1>
-                <p className="text-slate-600 dark:text-slate-400">Manage application preferences and configurations.</p>
+                <h1 className="text-3xl font-bold text-text-main mb-2">Settings</h1>
+                <p className="text-text-muted">Manage application preferences and configurations.</p>
             </div>
 
             {/* Theme Section */}
             <section className="glass-card p-6">
-                <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4">Appearance</h2>
+                <h2 className="text-xl font-semibold text-text-main mb-4">Appearance</h2>
                 <div className="flex items-center justify-between">
                     <div className="space-y-1">
-                        <div className="text-base font-medium text-slate-900 dark:text-slate-200">Theme Mode</div>
-                        <div className="text-sm text-slate-500 dark:text-slate-400">
+                        <div className="text-base font-medium text-text-main">Theme Mode</div>
+                        <div className="text-sm text-text-muted">
                             Select your preferred interface appearance.
                         </div>
                     </div>
@@ -113,14 +113,14 @@ export default function SettingsPage() {
             <section className="glass-card p-6">
                 <div className="flex items-center justify-between mb-6">
                     <div>
-                        <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Application Statuses</h2>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                        <h2 className="text-xl font-semibold text-text-main">Application Statuses</h2>
+                        <p className="text-sm text-text-muted mt-1">
                             Customize the stages of your application process.
                         </p>
                     </div>
                     <button
                         onClick={resetToDefaults}
-                        className="text-xs flex items-center space-x-1 text-slate-500 hover:text-blue-500 transition-colors"
+                        className="text-xs flex items-center space-x-1 text-text-muted hover:text-blue-500 transition-colors"
                         title="Reset to default list"
                     >
                         <RotateCcw size={14} />
@@ -150,11 +150,11 @@ export default function SettingsPage() {
                 {/* Status List */}
                 <div className="space-y-2">
                     {statuses.map((status) => (
-                        <div key={status} className="flex items-center justify-between p-3 bg-slate-100/50 dark:bg-slate-700/30 rounded-lg group hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors">
-                            <span className="font-medium text-slate-700 dark:text-slate-200">{status}</span>
+                        <div key={status} className="flex items-center justify-between p-3 bg-surface hover:bg-surface-hover rounded-lg group transition-colors">
+                            <span className="font-medium text-text-main">{status}</span>
                             <button
                                 onClick={() => handleDeleteClick(status)}
-                                className="text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1"
+                                className="text-text-muted hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1"
                                 title="Delete status"
                             >
                                 <Trash2 size={18} />
@@ -168,9 +168,9 @@ export default function SettingsPage() {
             {deleteData && (
                 <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
                     <div className="glass-card w-full max-w-md p-6 space-y-4">
-                        <h3 className="text-lg font-bold text-white">Delete Status</h3>
-                        <p className="text-slate-300">
-                            The status <span className="font-semibold text-white">"{deleteData.status}"</span> is currently used by <span className="font-semibold text-white">{deleteData.usageCount}</span> applications.
+                        <h3 className="text-lg font-bold text-text-main">Delete Status</h3>
+                        <p className="text-text-muted">
+                            The status <span className="font-semibold text-text-main">"{deleteData.status}"</span> is currently used by <span className="font-semibold text-text-main">{deleteData.usageCount}</span> applications.
                         </p>
 
                         <div className="space-y-4 pt-2">
@@ -186,7 +186,7 @@ export default function SettingsPage() {
                                         }}
                                         className="text-blue-600 focus:ring-blue-500 h-4 w-4"
                                     />
-                                    <span className="text-slate-200">Migrate applications to:</span>
+                                    <span className="text-text-main">Migrate applications to:</span>
                                 </label>
                                 <select
                                     disabled={!migrateTarget}
@@ -195,7 +195,7 @@ export default function SettingsPage() {
                                     className="mt-2 w-full glass-input px-3 py-2 text-sm disabled:opacity-50"
                                 >
                                     {statuses.filter(s => s !== deleteData.status).map(s => (
-                                        <option key={s} value={s} className="bg-slate-800">{s}</option>
+                                        <option key={s} value={s} className="bg-background">{s}</option>
                                     ))}
                                 </select>
                             </div>
@@ -209,9 +209,9 @@ export default function SettingsPage() {
                                         onChange={() => setMigrateTarget('')}
                                         className="text-blue-600 focus:ring-blue-500 h-4 w-4"
                                     />
-                                    <span className="text-slate-200">Keep existing usages</span>
+                                    <span className="text-text-main">Keep existing usages</span>
                                 </label>
-                                <p className="text-xs text-slate-400 mt-1 ml-7">
+                                <p className="text-xs text-text-muted mt-1 ml-7">
                                     Applications will retain the status "{deleteData.status}", but it will be removed from the dropdown for future selection.
                                 </p>
                             </div>
@@ -220,7 +220,7 @@ export default function SettingsPage() {
                         <div className="flex justify-end space-x-3 pt-4">
                             <button
                                 onClick={() => setDeleteData(null)}
-                                className="px-4 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 rounded-lg transition-colors"
+                                className="px-4 py-2 text-sm font-medium text-text-muted hover:bg-surface-hover rounded-lg transition-colors"
                             >
                                 Cancel
                             </button>
