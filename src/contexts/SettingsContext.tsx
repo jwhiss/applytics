@@ -39,8 +39,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
             try {
                 const settings = await window.electronAPI.getSettings();
 
-                if (settings.theme) {
-                    setTheme(settings.theme);
+                if (settings.theme === 'light' || settings.theme === 'dark') {
+                    setTheme(settings.theme as Theme);
                 } else {
                     // Default to dark
                     setTheme('dark');
@@ -114,6 +114,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useSettings() {
     const context = useContext(SettingsContext);
     if (context === undefined) {
