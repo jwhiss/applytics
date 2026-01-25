@@ -21,6 +21,8 @@ export interface ApplicationStats {
     total: number;
     byStatus: { status: string; count: number }[];
     byKeyword: { keyword: string; count: number }[];
+    avgResponseTime: number | null; // in days
+    interviewRate: number; // percentage 0-100
 }
 
 export interface HistoryItem {

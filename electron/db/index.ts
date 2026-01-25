@@ -232,6 +232,34 @@ export function getStats() {
     const total = db.prepare('SELECT COUNT(*) as count FROM applications').get() as { count: number };
     const byStatus = db.prepare('SELECT status, COUNT(*) as count FROM applications GROUP BY status').all();
 
+    // Calculate Interview Rate: % of apps that reached Interview, Offer, or Accepted
+    // distinct application_ids in history with relevant statuses
+    const interviewReached = db.prepare(`
+        SELECT COUNT(DISTINCT application_id) as count 
+        FROM history 
+        WHERE status IN ('Interview', 'Offer', 'Accepted')
+    `).get() as { count: number };
+
+    const interviewRate = total.count > 0 ? (interviewReached.count / total.count) * 100 : 0;
+
+    // Calculate Average Response Time
+    // Time difference between date_applied and first status change to something meaningful
+    // Meaningful = NOT 'Applied', 'Withdrawn', 'Online Assessment'
+    const avgResponseTimeResult = db.prepare(`
+        SELECT AVG(julianday(h.date) - julianday(a.date_applied)) as avgDays
+        FROM applications a
+        JOIN history h ON h.application_id = a.id
+        WHERE h.id = (
+            SELECT id FROM history h2
+            WHERE h2.application_id = a.id
+            AND h2.status NOT IN ('Applied', 'Withdrawn', 'Online Assessment')
+            ORDER BY h2.date ASC
+            LIMIT 1
+        )
+    `).get() as { avgDays: number | null };
+
+    const avgResponseTime = avgResponseTimeResult.avgDays;
+
     // Keyword analysis
     const titles = db.prepare('SELECT title FROM applications').all() as { title: string }[];
     const keywords: Record<string, number> = {};
@@ -262,7 +290,9 @@ export function getStats() {
     return {
         total: total.count,
         byStatus,
-        byKeyword
+        byKeyword,
+        avgResponseTime,
+        interviewRate
     };
 }
 
