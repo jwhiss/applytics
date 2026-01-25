@@ -122,7 +122,7 @@ function App() {
 
           <div className="h-full min-w-[768px]">
             {currentView === 'dashboard' ? (
-              <Dashboard />
+              <Dashboard onEdit={setEditingApp} />
             ) : currentView === 'company' && selectedCompany ? (
               <CompanyView
                 companyName={selectedCompany}
