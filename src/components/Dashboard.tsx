@@ -176,7 +176,7 @@ export default function Dashboard({ onEdit }: Props) {
                         {recentActivity.length === 0 ? (
                             <p className="text-text-muted">No recent activity.</p>
                         ) : (
-                            recentActivity.slice(0, 2).map((item) => (
+                            recentActivity.slice(0, 3).map((item) => (
                                 <div key={item.id} className="p-3 bg-surface rounded-lg border border-border shadow-sm">
                                     <div className="flex items-center space-x-2 mb-2">
                                         <div
