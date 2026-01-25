@@ -61,8 +61,8 @@ export default function SettingsPage() {
                 'Interview',
                 'Offer',
                 'Rejected',
-                'Online Assessment Expired',
-                'Withdrawn'
+                'Withdrawn',
+                'Accepted'
             ];
             await updateStatuses(defaults);
         }

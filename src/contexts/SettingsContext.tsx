@@ -9,8 +9,8 @@ const DEFAULT_STATUSES = [
     'Interview',
     'Offer',
     'Rejected',
-    'Online Assessment Expired',
-    'Withdrawn'
+    'Withdrawn',
+    'Accepted'
 ];
 
 type Theme = 'light' | 'dark';
