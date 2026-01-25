@@ -16,7 +16,7 @@ import {
     Title,
 } from 'chart.js';
 import { Bar, Doughnut } from 'react-chartjs-2';
-import type { ApplicationStats } from '../types/index';
+import type { Application, ApplicationStats } from '../types/index';
 import ActivityLogModal from './ActivityLogModal';
 import type { HistoryItem } from '../types/index';
 
@@ -30,7 +30,11 @@ ChartJS.register(
     Title
 );
 
-export default function Dashboard() {
+interface Props {
+    onEdit: (app: Application | null) => void;
+}
+
+export default function Dashboard({ onEdit }: Props) {
     const [stats, setStats] = useState<ApplicationStats | null>(null);
     const [recentActivity, setRecentActivity] = useState<(HistoryItem & { company: string; title: string })[]>([]);
     const [showActivityModal, setShowActivityModal] = useState(false);
@@ -116,7 +120,16 @@ export default function Dashboard() {
 
     return (
         <div className="p-6 space-y-6">
-            <h1 className="text-3xl font-bold text-text-main">Dashboard</h1>
+            <div className="flex justify-between items-center">
+                <h1 className="text-3xl font-bold text-text-main">Dashboard</h1>
+
+                <button
+                    onClick={() => onEdit(null)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                >
+                    New Application
+                </button>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="glass-card p-6 lg:col-span-1">
