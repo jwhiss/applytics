@@ -114,52 +114,31 @@ export default function Dashboard({ onEdit }: Props) {
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="glass-card p-6 lg:col-span-1">
-                    <h2 className="text-xl font-semibold mb-4 text-text-main">Total Applications</h2>
-                    <div className="text-5xl font-bold text-blue-600 dark:text-blue-400 mb-2">{stats.total}</div>
-                    <p className="text-text-muted text-sm">Tracked across all time</p>
-                </div>
-
-                <div className="glass-card p-6 lg:col-span-3">
-                    <div className="flex justify-between items-start mb-4">
-                        <h2 className="text-xl font-semibold text-text-main">Recent Activity</h2>
-                        {recentActivity.length > 0 && (
-                            <button
-                                onClick={() => setShowActivityModal(true)}
-                                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 font-medium transition-colors"
-                            >
-                                View All Activity
-                            </button>
-                        )}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                <div className="space-y-6">
+                    <div className="glass-card p-6">
+                        <h2 className="text-xl font-semibold mb-4 text-text-main">Total Applications</h2>
+                        <div className="text-5xl font-bold text-blue-600 dark:text-blue-400 mb-2">{stats.total}</div>
+                        <p className="text-text-muted text-sm">Tracked across all time</p>
                     </div>
 
-                    <div className="space-y-3">
-                        {recentActivity.length === 0 ? (
-                            <p className="text-text-muted">No recent activity.</p>
-                        ) : (
-                            recentActivity.slice(0, 3).map((item) => (
-                                <div key={item.id} className="flex items-center justify-between p-3 bg-surface rounded-lg border border-border shadow-sm">
-                                    <div className="flex items-center space-x-3">
-                                        <div
-                                            className="w-2 h-2 rounded-full"
-                                            style={{ backgroundColor: `rgb(${getStatusBaseColor(item.status).r}, ${getStatusBaseColor(item.status).g}, ${getStatusBaseColor(item.status).b})` }}
-                                        />
-                                        <div>
-                                            <span className="font-medium text-text-main">{item.company}</span>
-                                            <span className="mx-2 text-text-muted">•</span>
-                                            <span className="text-text-muted">{item.status}</span>
-                                        </div>
-                                    </div>
-                                    <span className="text-xs text-text-muted">{new Date(item.date).toLocaleString()}</span>
-                                </div>
-                            ))
-                        )}
+                    <div className="glass-card p-6">
+                        <h2 className="text-lg font-semibold mb-2 text-text-main">Avg. Response Time</h2>
+                        <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-1">
+                            {stats.avgResponseTime !== null ? `${stats.avgResponseTime.toFixed(1)} Days` : 'N/A'}
+                        </div>
+                        <p className="text-text-muted text-xs">Excludes immediate updates</p>
+                    </div>
+
+                    <div className="glass-card p-6">
+                        <h2 className="text-lg font-semibold mb-2 text-text-main">Interview Rate</h2>
+                        <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">
+                            {stats.interviewRate.toFixed(1)}%
+                        </div>
+                        <p className="text-text-muted text-xs">Applications reaching interview</p>
                     </div>
                 </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="glass-card p-6">
                     <h2 className="text-xl font-semibold mb-4 text-text-main">Application Status</h2>
                     <div className="h-64 flex justify-center">
@@ -176,6 +155,42 @@ export default function Dashboard({ onEdit }: Props) {
                             <div className="h-full flex items-center justify-center text-text-muted">
                                 Start applying to see your role analysis!
                             </div>
+                        )}
+                    </div>
+                </div>
+
+                <div className="glass-card p-6">
+                    <div className="flex justify-between items-start mb-4">
+                        <h2 className="text-xl font-semibold text-text-main">Recent Activity</h2>
+                        {recentActivity.length > 0 && (
+                            <button
+                                onClick={() => setShowActivityModal(true)}
+                                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 font-medium transition-colors"
+                            >
+                                View All
+                            </button>
+                        )}
+                    </div>
+
+                    <div className="space-y-3">
+                        {recentActivity.length === 0 ? (
+                            <p className="text-text-muted">No recent activity.</p>
+                        ) : (
+                            recentActivity.slice(0, 2).map((item) => (
+                                <div key={item.id} className="p-3 bg-surface rounded-lg border border-border shadow-sm">
+                                    <div className="flex items-center space-x-2 mb-2">
+                                        <div
+                                            className="w-2 h-2 rounded-full flex-shrink-0"
+                                            style={{ backgroundColor: `rgb(${getStatusBaseColor(item.status).r}, ${getStatusBaseColor(item.status).g}, ${getStatusBaseColor(item.status).b})` }}
+                                        />
+                                        <span className="font-medium text-text-main truncate block">{item.company}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-xs">
+                                        <span className="text-text-muted truncate max-w-[50%]">{item.status}</span>
+                                        <span className="text-text-muted">{new Date(item.date).toLocaleDateString()}</span>
+                                    </div>
+                                </div>
+                            ))
                         )}
                     </div>
                 </div>
