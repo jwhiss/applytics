@@ -6,7 +6,7 @@ A modern, offline-first desktop application designed to  organize and track your
 
 ## Features
 
--   **Dashboard Analytics**: Visual breakdown of your application status with interactive charts.
+-   **Dashboard Analytics**: Visual breakdown of your application status with interactive charts and statistics.
 -   **Kanban Board**: Drag-and-drop interface to manage the lifecycle of your applications from "Applied" to "Offer".
 -   **Application History**: Detailed timeline of every update for each application, including status changes and notes.
 -   **Company Profiles**: View key statistics and history for specific companies.
