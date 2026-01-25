@@ -7,6 +7,7 @@
 import { useEffect, useState } from 'react';
 import type { Application } from '../types/index';
 import { useSettings } from '../contexts/SettingsContext';
+import { getStatusColorStyles } from '../utils/statusColors';
 
 interface Props {
     lastUpdated: number;
@@ -75,12 +76,11 @@ export default function KanbanBoard({ lastUpdated, onEdit }: Props) {
                         <div
                             key={status}
                             className="flex-1 min-w-[280px] flex flex-col glass-card bg-surface/30"
+                            style={{ borderTop: `4px solid ${getStatusColorStyles(status).text}` }}
                             onDragOver={handleDragOver}
                             onDrop={(e) => handleDrop(e, status)}
                         >
-                            <div className={`p-4 border-b border-border font-semibold flex justify-between items-center
-                                ${status === 'Offer' ? 'text-green-600 dark:text-green-400' :
-                                    status === 'Rejected' ? 'text-red-600 dark:text-red-400' : 'text-text-main'}`}>
+                            <div className="p-4 border-b border-border font-semibold flex justify-between items-center text-text-main">
                                 <span>{status}</span>
                                 <span className="text-xs bg-surface-hover px-2 py-1 rounded-full text-text-muted">
                                     {columnApps.length}

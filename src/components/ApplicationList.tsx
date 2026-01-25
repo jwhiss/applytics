@@ -9,6 +9,7 @@ import type { Application, HistoryItem } from '../types/index';
 import ImportModal from './ImportModal';
 import Timeline from './Timeline';
 import { Search, ChevronDown, ChevronUp, ArrowUpDown } from 'lucide-react';
+import { getStatusColorStyles } from '../utils/statusColors';
 
 interface Props {
     onEdit: (app: Application | null) => void;
@@ -189,14 +190,14 @@ export default function ApplicationList({ onEdit, onViewCompany, lastUpdated }: 
                                     </td>
                                     <td className="px-6 py-4">{app.title}</td>
                                     <td className="px-6 py-4">
-                                        <span className={`px-2 py-1 rounded-full text-xs font-semibold
-                        ${app.status === 'Offer' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
-                                                app.status === 'Rejected' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
-                                                    app.status === 'Applied' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
-                                                        app.status === 'Applied' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
-                                                            app.status === 'Screening' || app.status === 'Interview' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' :
-                                                                'bg-slate-500/20 text-text-muted border border-border'
-                                            }`}>
+                                        <span
+                                            className="px-2 py-1 rounded-full text-xs font-semibold border"
+                                            style={{
+                                                backgroundColor: getStatusColorStyles(app.status).background,
+                                                color: getStatusColorStyles(app.status).text,
+                                                borderColor: getStatusColorStyles(app.status).border
+                                            }}
+                                        >
                                             {app.status}
                                         </span>
                                     </td>

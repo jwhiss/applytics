@@ -19,6 +19,7 @@ import { Bar, Doughnut } from 'react-chartjs-2';
 import type { Application, ApplicationStats } from '../types/index';
 import ActivityLogModal from './ActivityLogModal';
 import type { HistoryItem } from '../types/index';
+import { getStatusBaseColor } from '../utils/statusColors';
 
 ChartJS.register(
     ArcElement,
@@ -75,30 +76,12 @@ export default function Dashboard({ onEdit }: Props) {
                 label: '# of Applications',
                 data: stats.byStatus.map(s => s.count),
                 backgroundColor: stats.byStatus.map(s => {
-                    switch (s.status) {
-                        case 'Applied': return 'rgba(54, 162, 235, 0.6)'; // Blue
-                        case 'Online Assessment': return 'rgba(6, 182, 212, 0.6)'; // Cyan
-                        case 'Rejected': return 'rgba(255, 99, 132, 0.6)'; // Red
-                        case 'Screening': return 'rgba(75, 192, 192, 0.6)'; // Green
-                        case 'Interview': return 'rgba(153, 102, 255, 0.6)'; // Purple
-                        case 'Offer': return 'rgba(255, 206, 86, 0.6)'; // Yellow
-                        case 'Withdrawn': return 'rgba(201, 203, 207, 0.6)'; // Grey
-                        case 'Online Assessment Expired': return 'rgba(249, 115, 22, 0.6)'; // Orange
-                        default: return 'rgba(54, 162, 235, 0.6)'; // Default Blue
-                    }
+                    const { r, g, b } = getStatusBaseColor(s.status);
+                    return `rgba(${r}, ${g}, ${b}, 0.6)`;
                 }),
                 borderColor: stats.byStatus.map(s => {
-                    switch (s.status) {
-                        case 'Applied': return 'rgba(54, 162, 235, 1)';
-                        case 'Online Assessment': return 'rgba(6, 182, 212, 1)';
-                        case 'Rejected': return 'rgba(255, 99, 132, 1)';
-                        case 'Screening': return 'rgba(75, 192, 192, 1)';
-                        case 'Interview': return 'rgba(153, 102, 255, 1)';
-                        case 'Offer': return 'rgba(255, 206, 86, 1)';
-                        case 'Withdrawn': return 'rgba(201, 203, 207, 1)';
-                        case 'Online Assessment Expired': return 'rgba(249, 115, 22, 1)';
-                        default: return 'rgba(54, 162, 235, 1)';
-                    }
+                    const { r, g, b } = getStatusBaseColor(s.status);
+                    return `rgba(${r}, ${g}, ${b}, 1)`;
                 }),
                 borderWidth: 1,
             },
@@ -158,7 +141,10 @@ export default function Dashboard({ onEdit }: Props) {
                             recentActivity.slice(0, 3).map((item) => (
                                 <div key={item.id} className="flex items-center justify-between p-3 bg-surface rounded-lg border border-border shadow-sm">
                                     <div className="flex items-center space-x-3">
-                                        <div className={`w-2 h-2 rounded-full ${item.status === 'Offer' ? 'bg-green-500' : 'bg-blue-500'}`} />
+                                        <div
+                                            className="w-2 h-2 rounded-full"
+                                            style={{ backgroundColor: `rgb(${getStatusBaseColor(item.status).r}, ${getStatusBaseColor(item.status).g}, ${getStatusBaseColor(item.status).b})` }}
+                                        />
                                         <div>
                                             <span className="font-medium text-text-main">{item.company}</span>
                                             <span className="mx-2 text-text-muted">•</span>
