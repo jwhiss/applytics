@@ -121,49 +121,54 @@ export default function Dashboard({ onEdit }: Props) {
                 <div className="lg:col-span-2 grid grid-cols-2 gap-4">
                     {/* Row 1 */}
                     <div className="glass-card p-4">
-                        <h2 className="text-sm font-medium text-text-muted mb-1">Total Applications</h2>
-                        <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{stats.total}</div>
+                        <h2 className="text-xl font-semibold mb-4 text-text-main">Total Applications</h2>
+                        <div className="text-5xl font-bold text-blue-600 dark:text-blue-400 mb-2">{stats.total}</div>
+                        <p className="text-text-muted text-sm">Tracked across all time</p>
                     </div>
 
                     <div className="glass-card p-4">
-                        <h2 className="text-sm font-medium text-text-muted mb-1">Weekly Activity</h2>
+                        <h2 className="text-xl font-semibold mb-4 text-text-main">Applications per Week</h2>
                         <div className="flex items-center gap-2">
-                            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                            <div className="text-5xl font-bold text-orange-600 dark:text-orange-400 mb-2">
                                 {stats.recentActivityStats?.currentPeriodAvg ?? 0}
                             </div>
                             {(() => {
                                 const trend = stats.recentActivityStats?.trend ?? 'neutral';
-                                if (trend === 'up') return <TrendingUp className="w-4 h-4 text-green-500" />;
-                                if (trend === 'down') return <TrendingDown className="w-4 h-4 text-red-500" />;
-                                return <Minus className="w-4 h-4 text-text-muted" />;
+                                if (trend === 'up') return <TrendingUp className="w-10 h-10 text-green-500 mb-2" />;
+                                if (trend === 'down') return <TrendingDown className="w-10 h-10 text-red-500 mb-2" />;
+                                return <Minus className="w-10 h-10 text-text-muted mb-2" />;
                             })()}
                         </div>
-                        <p className="text-text-muted text-[10px] mt-1">
-                            Prior: {stats.recentActivityStats?.previousPeriodAvg ?? 0}/week
+                        <p className="text-text-muted text-sm">
+                            For the last month
+                            <br />
+                            Prior month: {stats.recentActivityStats?.previousPeriodAvg ?? 0}/week
                         </p>
                     </div>
 
                     {/* Row 2 */}
-                    <div className="glass-card p-4 ">
-                        <h2 className="text-sm font-medium text-text-muted mb-1">Interview Rate</h2>
-                        <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                    <div className="glass-card p-4">
+                        <h2 className="text-lg font-semibold mb-2 text-text-main">Interview Rate</h2>
+                        <div className="text-4xl font-bold text-green-600 dark:text-green-400 mb-1">
                             {stats.interviewRate.toFixed(1)}%
                         </div>
+                        <p className="text-text-muted text-sm">Applications reaching interview</p>
                     </div>
 
                     <div className="glass-card p-4">
-                        <h2 className="text-sm font-medium text-text-muted mb-1">Avg. Response Time</h2>
-                        <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                        <h2 className="text-lg font-semibold mb-2 text-text-main">Avg. Response Time</h2>
+                        <div className="text-4xl font-bold text-purple-600 dark:text-purple-400 mb-1">
                             {stats.avgResponseTime !== null ? `${stats.avgResponseTime.toFixed(1)} Days` : 'N/A'}
                         </div>
+                        <p className="text-text-muted text-sm">Excludes immediate updates</p>
                     </div>
                 </div>
 
                 {/* Right Column: Status Chart */}
                 <div className="lg:col-span-2 grid grid-cols-1 gap-4">
-                    <div className="glass-card p-6 flex flex-col justify-center">
+                    <div className="glass-card p-6 flex flex-col">
                         <h2 className="text-xl font-semibold mb-4 text-text-main">Application Status</h2>
-                        <div className="h-64 flex justify-center">
+                        <div className="h-76 flex justify-center">
                             <Doughnut data={statusData} options={{ maintainAspectRatio: false }} />
                         </div>
                     </div>
