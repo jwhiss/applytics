@@ -6,16 +6,22 @@ A modern, offline-first desktop application designed to  organize and track your
 
 ## Features
 
--   **Dashboard Analytics**: Visual breakdown of your application status with interactive charts and statistics.
--   **Kanban Board**: Drag-and-drop interface to manage the lifecycle of your applications from "Applied" to "Offer".
--   **Application History**: Detailed timeline of every update for each application, including status changes and notes.
--   **Company Profiles**: View key statistics and history for specific companies.
--   **Offline First**: All data is stored locally in a SQLite database, ensuring privacy and speed.
--   **Import/Export**: Easily import existing application data (Excel/CSV support).
+-   **Dashboard Analytics**: comprehensive overview including:
+    -   **Total Application Count**: Track your lifetime application volume.
+    -   **Weekly Application Trend**: Monitor your productivity with week-over-week comparisons and trend indicators.
+    -   **Interview Rate**: Visualize your conversion rate from application to interview.
+    -   **Average Response Time**: Track how long companies take to respond.
+    -   **Role Analysis**: Breakdown applications by job title keywords.
+    -   **Status Distribution**: Visual doughnut chart of your current application pipeline.
+-   **Kanban Board**: Interactive drag-and-drop board to manage application lifecycle stages.
+-   **Application Timeline**: Detailed history of every status change and note for each application.
+-   **Company Profiles**: Aggregated views of all applications to specific companies.
+-   **Offline First**: Secure, local SQLite database storage.
+-   **Data Import**: Bulk import capabilities from Excel/CSV files for easy migration.
 
 ## Tech Stack
 
--   **Frontend**: React, TypeScript, Tailwind CSS, Recharts / Chart.js
+-   **Frontend**: React, TypeScript, Tailwind CSS, Chart.js, Lucide React
 -   **Backend**: Electron (Main Process), Better-SQLite3
 -   **Build Tool**: Vite
 
