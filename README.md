@@ -15,9 +15,11 @@ A modern, offline-first desktop application designed to  organize and track your
     -   **Status Distribution**: Visual doughnut chart of your current application pipeline.
 -   **Kanban Board**: Interactive drag-and-drop board to manage application lifecycle stages.
 -   **Application Timeline**: Detailed history of every status change and note for each application.
+-   **Customizable Application Statuses**: Define your own application statuses to match your workflow.
 -   **Company Profiles**: Aggregated views of all applications to specific companies.
 -   **Offline First**: Secure, local SQLite database storage.
 -   **Data Import**: Bulk import capabilities from Excel/CSV files for easy migration.
+-   **Themes**: Choose between light and dark themes.
 
 ## Tech Stack
 
