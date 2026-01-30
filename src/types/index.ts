@@ -23,6 +23,11 @@ export interface ApplicationStats {
     byKeyword: { keyword: string; count: number }[];
     avgResponseTime: number | null; // in days
     interviewRate: number; // percentage 0-100
+    recentActivityStats: {
+        currentPeriodAvg: number;
+        previousPeriodAvg: number;
+        trend: 'up' | 'down' | 'neutral';
+    };
 }
 
 export interface HistoryItem {
