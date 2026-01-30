@@ -19,6 +19,7 @@ import { Bar, Doughnut } from 'react-chartjs-2';
 import type { Application, ApplicationStats } from '../types/index';
 import ActivityLogModal from './ActivityLogModal';
 import type { HistoryItem } from '../types/index';
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { getStatusBaseColor } from '../utils/statusColors';
 
 ChartJS.register(
@@ -114,37 +115,63 @@ export default function Dashboard({ onEdit }: Props) {
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-                <div className="space-y-6">
-                    <div className="glass-card p-6">
-                        <h2 className="text-xl font-semibold mb-4 text-text-main">Total Applications</h2>
-                        <div className="text-5xl font-bold text-blue-600 dark:text-blue-400 mb-2">{stats.total}</div>
-                        <p className="text-text-muted text-sm">Tracked across all time</p>
+            {/* Top Section: Metrics Grid + Status Chart */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
+                {/* Left Column: 2x2 Metrics Grid */}
+                <div className="lg:col-span-2 grid grid-cols-2 gap-4">
+                    {/* Row 1 */}
+                    <div className="glass-card p-4">
+                        <h2 className="text-sm font-medium text-text-muted mb-1">Total Applications</h2>
+                        <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{stats.total}</div>
                     </div>
 
-                    <div className="glass-card p-6">
-                        <h2 className="text-lg font-semibold mb-2 text-text-main">Avg. Response Time</h2>
-                        <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-1">
-                            {stats.avgResponseTime !== null ? `${stats.avgResponseTime.toFixed(1)} Days` : 'N/A'}
+                    <div className="glass-card p-4">
+                        <h2 className="text-sm font-medium text-text-muted mb-1">Weekly Activity</h2>
+                        <div className="flex items-center gap-2">
+                            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                                {stats.recentActivityStats?.currentPeriodAvg ?? 0}
+                            </div>
+                            {(() => {
+                                const trend = stats.recentActivityStats?.trend ?? 'neutral';
+                                if (trend === 'up') return <TrendingUp className="w-4 h-4 text-green-500" />;
+                                if (trend === 'down') return <TrendingDown className="w-4 h-4 text-red-500" />;
+                                return <Minus className="w-4 h-4 text-text-muted" />;
+                            })()}
                         </div>
-                        <p className="text-text-muted text-xs">Excludes immediate updates</p>
+                        <p className="text-text-muted text-[10px] mt-1">
+                            Prior: {stats.recentActivityStats?.previousPeriodAvg ?? 0}/week
+                        </p>
                     </div>
 
-                    <div className="glass-card p-6">
-                        <h2 className="text-lg font-semibold mb-2 text-text-main">Interview Rate</h2>
-                        <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">
+                    {/* Row 2 */}
+                    <div className="glass-card p-4 ">
+                        <h2 className="text-sm font-medium text-text-muted mb-1">Interview Rate</h2>
+                        <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                             {stats.interviewRate.toFixed(1)}%
                         </div>
-                        <p className="text-text-muted text-xs">Applications reaching interview</p>
+                    </div>
+
+                    <div className="glass-card p-4">
+                        <h2 className="text-sm font-medium text-text-muted mb-1">Avg. Response Time</h2>
+                        <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                            {stats.avgResponseTime !== null ? `${stats.avgResponseTime.toFixed(1)} Days` : 'N/A'}
+                        </div>
                     </div>
                 </div>
 
-                <div className="glass-card p-6">
-                    <h2 className="text-xl font-semibold mb-4 text-text-main">Application Status</h2>
-                    <div className="h-64 flex justify-center">
-                        <Doughnut data={statusData} options={{ maintainAspectRatio: false }} />
+                {/* Right Column: Status Chart */}
+                <div className="lg:col-span-2 grid grid-cols-1 gap-4">
+                    <div className="glass-card p-6 flex flex-col justify-center">
+                        <h2 className="text-xl font-semibold mb-4 text-text-main">Application Status</h2>
+                        <div className="h-64 flex justify-center">
+                            <Doughnut data={statusData} options={{ maintainAspectRatio: false }} />
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            {/* Bottom Section: Role Analysis & Recent Activity */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
                 <div className="glass-card p-6">
                     <h2 className="text-xl font-semibold mb-4 text-text-main">Role Analysis</h2>
