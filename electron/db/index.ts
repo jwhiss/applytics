@@ -287,12 +287,41 @@ export function getStats() {
         .slice(0, 10); // Top 10 keywords
 
 
+
+
+    // Weekly Activity Stats (Last 30 Days vs Prior 30 Days)
+    const last30Count = db.prepare(`
+        SELECT COUNT(*) as count 
+        FROM applications 
+        WHERE julianday('now') - julianday(date_applied) <= 30
+    `).get() as { count: number };
+
+    const prior30Count = db.prepare(`
+        SELECT COUNT(*) as count 
+        FROM applications 
+        WHERE julianday('now') - julianday(date_applied) > 30 
+        AND julianday('now') - julianday(date_applied) <= 60
+    `).get() as { count: number };
+
+    const weeksInMonth = 30 / 7;
+    const currentPeriodAvg = Number((last30Count.count / weeksInMonth).toFixed(1));
+    const previousPeriodAvg = Number((prior30Count.count / weeksInMonth).toFixed(1));
+
+    let trend: 'up' | 'down' | 'neutral' = 'neutral';
+    if (currentPeriodAvg > previousPeriodAvg) trend = 'up';
+    else if (currentPeriodAvg < previousPeriodAvg) trend = 'down';
+
     return {
         total: total.count,
         byStatus,
         byKeyword,
         avgResponseTime,
-        interviewRate
+        interviewRate,
+        recentActivityStats: {
+            currentPeriodAvg,
+            previousPeriodAvg,
+            trend
+        }
     };
 }
 
