@@ -409,12 +409,13 @@ export function getAnalytics() {
 }
 
 export function bulkUpsertApplications(apps: Partial<Application>[]) {
-    const insert = db.prepare(`
+    // Prepared statements for Applications table
+    const insertApp = db.prepare(`
         INSERT INTO applications (company, title, status, date_applied, process_steps, outcome, notes)
         VALUES (@company, @title, @status, @date_applied, @process_steps, @outcome, @notes)
     `);
 
-    const update = db.prepare(`
+    const updateApp = db.prepare(`
         UPDATE applications 
         SET status = @status, 
             date_applied = @date_applied,
@@ -425,14 +426,26 @@ export function bulkUpsertApplications(apps: Partial<Application>[]) {
         WHERE id = @id
     `);
 
-    const findExisting = db.prepare('SELECT id FROM applications WHERE company = ? AND title = ?');
+    const findExisting = db.prepare('SELECT id, status FROM applications WHERE company = ? AND title = ?');
+
+    // Prepared statements for History table
+    // For new apps, we use the date_applied as the history date to establish the timeline
+    const insertHistoryWithDate = db.prepare('INSERT INTO history (application_id, status, date) VALUES (?, ?, ?)');
+
+    // For status updates on existing apps, we generally want to record WHEN the change happened.
+    // However, if we are bulk importing, we might want to respect some date? 
+    // Usually bulk imports are "current state", so CURRENT_TIMESTAMP (default) is appropriate for the change
+    // unless the user provided a specific date, but our history table structure is simple.
+    // For consistency with updateApplication, we'll use CURRENT_TIMESTAMP for status changes.
+    const insertHistory = db.prepare('INSERT INTO history (application_id, status) VALUES (?, ?)');
+
 
     const transaction = db.transaction((applications: Partial<Application>[]) => {
         let added = 0;
         let updated = 0;
 
         for (const app of applications) {
-            const existing = findExisting.get(app.company, app.title) as { id: number } | undefined;
+            const existing = findExisting.get(app.company, app.title) as { id: number; status: string } | undefined;
 
             const appData = {
                 company: app.company,
@@ -445,11 +458,22 @@ export function bulkUpsertApplications(apps: Partial<Application>[]) {
             };
 
             if (existing) {
-                update.run({ ...appData, id: existing.id });
+                // UPDATE
+                updateApp.run({ ...appData, id: existing.id });
                 updated++;
+
+                // Check for status change
+                if (existing.status !== appData.status) {
+                    insertHistory.run(existing.id, appData.status);
+                }
             } else {
-                insert.run(appData);
+                // INSERT
+                const info = insertApp.run(appData);
+                const newId = info.lastInsertRowid as number;
                 added++;
+
+                // ALWAYS insert initial history for new apps
+                insertHistoryWithDate.run(newId, appData.status, appData.date_applied);
             }
         }
         return { added, updated };
