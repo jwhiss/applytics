@@ -37,6 +37,13 @@ export interface HistoryItem {
     date: string;
 }
 
+export interface AnalyticsData {
+    totalApplicationsOverTime: { date: string; count: number }[];
+    appsPerWeek: { week: string; count: number }[];
+    interviewRateOverTime: { month: string; rate: number }[];
+    responseTimeDistribution: Record<string, number>;
+}
+
 export interface IElectronAPI {
     getApplications: () => Promise<Application[]>;
     addApplication: (app: Partial<Application>) => Promise<number>;
@@ -49,6 +56,7 @@ export interface IElectronAPI {
     getSettings: () => Promise<Record<string, unknown>>;
     saveSetting: (key: string, value: unknown) => Promise<void>;
     bulkUpdateStatus: (oldStatus: string, newStatus: string) => Promise<void>;
+    getAnalytics: () => Promise<AnalyticsData>;
 }
 
 declare global {
