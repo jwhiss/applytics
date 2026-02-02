@@ -12,4 +12,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getSettings: () => ipcRenderer.invoke('get-settings'),
     saveSetting: (key: string, value: unknown) => ipcRenderer.invoke('save-setting', { key, value }),
     bulkUpdateStatus: (oldStatus: string, newStatus: string) => ipcRenderer.invoke('bulk-update-status', { oldStatus, newStatus }),
+    getAnalytics: () => ipcRenderer.invoke('get-analytics'),
 });
