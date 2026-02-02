@@ -1,6 +1,6 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
-import { initDB, getApplications, addApplication, updateApplication, deleteApplication, getStats, bulkUpsertApplications, getHistory, getGlobalHistory, getSettings, saveSetting, bulkUpdateStatus } from './db/index';
+import { initDB, getApplications, addApplication, updateApplication, deleteApplication, getStats, bulkUpsertApplications, getHistory, getGlobalHistory, getSettings, saveSetting, bulkUpdateStatus, getAnalytics } from './db/index';
 
 const isDev = process.env.NODE_ENV !== 'production' && !app.isPackaged;
 
@@ -64,4 +64,5 @@ function setupIPC() {
     ipcMain.handle('get-settings', () => getSettings());
     ipcMain.handle('save-setting', (_, { key, value }) => saveSetting(key, value));
     ipcMain.handle('bulk-update-status', (_, { oldStatus, newStatus }) => bulkUpdateStatus(oldStatus, newStatus));
+    ipcMain.handle('get-analytics', () => getAnalytics());
 }

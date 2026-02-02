@@ -325,6 +325,89 @@ export function getStats() {
     };
 }
 
+export function getAnalytics() {
+    // 1. Total Applications Over Time (Cumulative)
+    // Group by date, ordered by date
+    const dailyCounts = db.prepare(`
+        SELECT date(date_applied) as date, COUNT(*) as count
+        FROM applications
+        GROUP BY date(date_applied)
+        ORDER BY date(date_applied) ASC
+    `).all() as { date: string; count: number }[];
+
+    // Calculate cumulative sum
+    let cumulative = 0;
+    const totalApplicationsOverTime = dailyCounts.map(day => {
+        cumulative += day.count;
+        return { date: day.date, count: cumulative };
+    });
+
+    // 2. Applications Per Week
+    // Group by Year-Week
+    const appsPerWeek = db.prepare(`
+        SELECT strftime('%Y-%W', date_applied) as week, COUNT(*) as count 
+        FROM applications 
+        GROUP BY week 
+        ORDER BY week ASC
+    `).all() as { week: string; count: number }[];
+
+
+    // 3. Interview Rate Over Time (Monthly)
+    // We need total apps vs apps that reached interview stage per month
+    const monthlyStats = db.prepare(`
+       SELECT 
+            strftime('%Y-%m', a.date_applied) as month,
+            COUNT(DISTINCT a.id) as total_apps,
+            COUNT(DISTINCT CASE WHEN h.status IN ('Interview', 'Offer', 'Accepted') THEN a.id END) as interview_apps
+        FROM applications a
+        LEFT JOIN history h ON a.id = h.application_id
+        GROUP BY month
+        ORDER BY month ASC
+    `).all() as { month: string; total_apps: number; interview_apps: number }[];
+
+    const interviewRateOverTime = monthlyStats.map(m => ({
+        month: m.month,
+        rate: m.total_apps > 0 ? (m.interview_apps / m.total_apps) * 100 : 0
+    }));
+
+    // 4. Response Time Distribution
+    // Bucket response times
+    const responseTimes = db.prepare(`
+        SELECT (julianday(h.date) - julianday(a.date_applied)) as days
+        FROM applications a
+        JOIN history h ON h.application_id = a.id
+        WHERE h.id = (
+            SELECT id FROM history h2
+            WHERE h2.application_id = a.id
+            AND h2.status NOT IN ('Applied', 'Withdrawn', 'Online Assessment')
+            ORDER BY h2.date ASC
+            LIMIT 1
+        )
+    `).all() as { days: number }[];
+
+    const responseTimeDistribution: Record<string, number> = {
+        '< 1 week': 0,
+        '1-2 weeks': 0,
+        '2-4 weeks': 0,
+        '1+ month': 0
+    };
+
+    responseTimes.forEach(r => {
+        const d = r.days;
+        if (d < 7) responseTimeDistribution['< 1 week']++;
+        else if (d < 14) responseTimeDistribution['1-2 weeks']++;
+        else if (d < 30) responseTimeDistribution['2-4 weeks']++;
+        else responseTimeDistribution['1+ month']++;
+    });
+
+    return {
+        totalApplicationsOverTime,
+        appsPerWeek,
+        interviewRateOverTime,
+        responseTimeDistribution
+    };
+}
+
 export function bulkUpsertApplications(apps: Partial<Application>[]) {
     const insert = db.prepare(`
         INSERT INTO applications (company, title, status, date_applied, process_steps, outcome, notes)
