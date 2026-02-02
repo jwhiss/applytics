@@ -7,10 +7,10 @@ A modern, offline-first desktop application designed to  organize and track your
 ## Features
 
 -   **Dashboard Analytics**: comprehensive overview including:
-    -   **Total Application Count**: Track your lifetime application volume.
-    -   **Weekly Application Trend**: Monitor your productivity with week-over-week comparisons and trend indicators.
-    -   **Interview Rate**: Visualize your conversion rate from application to interview.
-    -   **Average Response Time**: Track how long companies take to respond.
+    -   **Total Application Count**: Track your lifetime application volume. Click to view a cumulative growth chart.
+    -   **Weekly Application Trend**: Monitor your productivity with week-over-week comparisons and trend indicators. Click for a detailed weekly breakdown.
+    -   **Interview Rate**: Visualize your conversion rate from application to interview. Click to see the trend over time.
+    -   **Average Response Time**: Track how long companies take to respond. Click to view a response time distribution chart.
     -   **Role Analysis**: Breakdown applications by job title keywords.
     -   **Status Distribution**: Visual doughnut chart of your current application pipeline.
 -   **Kanban Board**: Interactive drag-and-drop board to manage application lifecycle stages.
