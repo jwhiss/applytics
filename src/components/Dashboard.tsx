@@ -14,9 +14,11 @@ import {
     LinearScale,
     BarElement,
     Title,
+    PointElement,
+    LineElement,
 } from 'chart.js';
-import { Bar, Doughnut } from 'react-chartjs-2';
-import type { Application, ApplicationStats } from '../types/index';
+import { Bar, Doughnut, Line } from 'react-chartjs-2';
+import type { Application, ApplicationStats, AnalyticsData } from '../types/index';
 import ActivityLogModal from './ActivityLogModal';
 import type { HistoryItem } from '../types/index';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
@@ -29,7 +31,9 @@ ChartJS.register(
     CategoryScale,
     LinearScale,
     BarElement,
-    Title
+    Title,
+    PointElement,
+    LineElement
 );
 
 interface Props {
@@ -40,6 +44,8 @@ export default function Dashboard({ onEdit }: Props) {
     const [stats, setStats] = useState<ApplicationStats | null>(null);
     const [recentActivity, setRecentActivity] = useState<(HistoryItem & { company: string; title: string })[]>([]);
     const [showActivityModal, setShowActivityModal] = useState(false);
+    const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
+    const [expandedCard, setExpandedCard] = useState<string | null>(null);
 
     useEffect(() => {
         let isMounted = true;
@@ -50,9 +56,16 @@ export default function Dashboard({ onEdit }: Props) {
                     window.electronAPI.getStats(),
                     window.electronAPI.getGlobalHistory()
                 ]);
+
+                // Fetch analytics data separately or together. 
+                // Since it's potentially heavy, we could fetch it only when needed, 
+                // but for now let's fetch it here to populate if expanded.
+                const analytics = await window.electronAPI.getAnalytics();
+
                 if (isMounted) {
                     setStats(statsData);
                     setRecentActivity(historyData);
+                    setAnalyticsData(analytics);
                 }
             } catch (error) {
                 console.error('Failed to load dashboard data:', error);
@@ -68,7 +81,6 @@ export default function Dashboard({ onEdit }: Props) {
     }, []);
 
     if (!stats) return <div className="p-8">Loading...</div>;
-
 
     const statusData = {
         labels: stats.byStatus.map(s => s.status),
@@ -102,8 +114,130 @@ export default function Dashboard({ onEdit }: Props) {
         ],
     };
 
+    const renderExpandedChart = () => {
+        if (!analyticsData || !expandedCard) return null;
+
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top' as const,
+                },
+            },
+        };
+
+        switch (expandedCard) {
+            case 'total-apps':
+                return (
+                    <div className="h-64">
+                        <Line
+                            data={{
+                                labels: analyticsData.totalApplicationsOverTime.map(d => new Date(d.date).toLocaleDateString()),
+                                datasets: [{
+                                    label: 'Total Applications',
+                                    data: analyticsData.totalApplicationsOverTime.map(d => d.count),
+                                    borderColor: 'rgb(59, 130, 246)',
+                                    backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                                    tension: 0.1
+                                }]
+                            }}
+                            options={commonOptions}
+                        />
+                    </div>
+                );
+            case 'apps-per-week':
+                return (
+                    <div className="h-64">
+                        <Bar
+                            data={{
+                                labels: analyticsData.appsPerWeek.map(d => d.week),
+                                datasets: [{
+                                    label: 'Applications per Week',
+                                    data: analyticsData.appsPerWeek.map(d => d.count),
+                                    backgroundColor: 'rgba(234, 88, 12, 0.6)',
+                                    borderColor: 'rgba(234, 88, 12, 1)',
+                                    borderWidth: 1
+                                }]
+                            }}
+                            options={commonOptions}
+                        />
+                    </div>
+                );
+            case 'interview-rate':
+                return (
+                    <div className="h-64">
+                        <Line
+                            data={{
+                                labels: analyticsData.interviewRateOverTime.map(d => d.month),
+                                datasets: [{
+                                    label: 'Interview Rate (%)',
+                                    data: analyticsData.interviewRateOverTime.map(d => d.rate),
+                                    borderColor: 'rgb(22, 163, 74)',
+                                    backgroundColor: 'rgba(22, 163, 74, 0.5)',
+                                    tension: 0.1
+                                }]
+                            }}
+                            options={commonOptions}
+                        />
+                    </div>
+                );
+            case 'response-time':
+                return (
+                    <div className="h-64">
+                        <Bar
+                            data={{
+                                labels: Object.keys(analyticsData.responseTimeDistribution),
+                                datasets: [{
+                                    label: 'Response Time Distribution',
+                                    data: Object.values(analyticsData.responseTimeDistribution),
+                                    backgroundColor: 'rgba(147, 51, 234, 0.6)',
+                                    borderColor: 'rgba(147, 51, 234, 1)',
+                                    borderWidth: 1
+                                }]
+                            }}
+                            options={commonOptions}
+                        />
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
+
     return (
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 relative">
+            {/* Unified Overlay for Expanded Charts */}
+            {expandedCard && analyticsData && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-sm transition-all duration-300"
+                    onClick={() => setExpandedCard(null)}
+                >
+                    <div
+                        className="bg-surface border border-border rounded-xl shadow-2xl w-full max-w-4xl p-6 relative animate-in fade-in zoom-in duration-200"
+                        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+                    >
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-2xl font-bold text-text-main">
+                                {expandedCard === 'total-apps' && 'Total Applications'}
+                                {expandedCard === 'apps-per-week' && 'Applications per Week'}
+                                {expandedCard === 'interview-rate' && 'Interview Rate'}
+                                {expandedCard === 'response-time' && 'Avg. Response Time'}
+                            </h2>
+                            <button
+                                onClick={() => setExpandedCard(null)}
+                                className="p-2 hover:bg-surface-hover rounded-full transition-colors"
+                            >
+                                <Minus className="w-6 h-6 text-text-muted rotate-45" /> {/* Close icon using Minus rotated */}
+                            </button>
+                        </div>
+                        <div className="h-96 w-full">
+                            {renderExpandedChart()}
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-text-main">Dashboard</h1>
 
@@ -119,14 +253,20 @@ export default function Dashboard({ onEdit }: Props) {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
                 {/* Left Column: 2x2 Metrics Grid */}
                 <div className="lg:col-span-2 grid grid-cols-2 gap-4">
-                    {/* Row 1 */}
-                    <div className="glass-card p-4">
+                    {/* Use standard cards with click handlers */}
+                    <div
+                        className="glass-card p-4 cursor-pointer hover:bg-surface-hover transition-colors"
+                        onClick={() => setExpandedCard('total-apps')}
+                    >
                         <h2 className="text-xl font-semibold mb-4 text-text-main">Total Applications</h2>
                         <div className="text-5xl font-bold text-blue-600 dark:text-blue-400 mb-2">{stats.total}</div>
                         <p className="text-text-muted text-sm">Tracked across all time</p>
                     </div>
 
-                    <div className="glass-card p-4">
+                    <div
+                        className="glass-card p-4 cursor-pointer hover:bg-surface-hover transition-colors"
+                        onClick={() => setExpandedCard('apps-per-week')}
+                    >
                         <h2 className="text-xl font-semibold mb-4 text-text-main">Applications per Week</h2>
                         <div className="flex items-center gap-2">
                             <div className="text-5xl font-bold text-orange-600 dark:text-orange-400 mb-2">
@@ -147,7 +287,10 @@ export default function Dashboard({ onEdit }: Props) {
                     </div>
 
                     {/* Row 2 */}
-                    <div className="glass-card p-4">
+                    <div
+                        className="glass-card p-4 cursor-pointer hover:bg-surface-hover transition-colors"
+                        onClick={() => setExpandedCard('interview-rate')}
+                    >
                         <h2 className="text-lg font-semibold mb-2 text-text-main">Interview Rate</h2>
                         <div className="text-4xl font-bold text-green-600 dark:text-green-400 mb-1">
                             {stats.interviewRate.toFixed(1)}%
@@ -155,7 +298,10 @@ export default function Dashboard({ onEdit }: Props) {
                         <p className="text-text-muted text-sm">Applications reaching interview</p>
                     </div>
 
-                    <div className="glass-card p-4">
+                    <div
+                        className="glass-card p-4 cursor-pointer hover:bg-surface-hover transition-colors"
+                        onClick={() => setExpandedCard('response-time')}
+                    >
                         <h2 className="text-lg font-semibold mb-2 text-text-main">Avg. Response Time</h2>
                         <div className="text-4xl font-bold text-purple-600 dark:text-purple-400 mb-1">
                             {stats.avgResponseTime !== null ? `${stats.avgResponseTime.toFixed(1)} Days` : 'N/A'}
